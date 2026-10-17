@@ -6,6 +6,34 @@ Each page walks through the session one step at a time. Every step has a diagram
 
 Open `examples/ops-process-service/page.html` in a browser to see a finished page.
 
+## What a page looks like
+
+Screenshots from the example page (an operations class on process and service redesign).
+
+**The top of a page.** Save or copy your notes, jump to any step, switch every note pad on or off at once, and open the class files (readings, case, the instructor's spreadsheets) straight from Brightspace or from your own downloaded copy.
+
+![Top of a study page: notes buttons, step navigation and the Files step](docs/screenshots/1-overview.png)
+
+**One step per screen, with your notes beside it.** Tap any shape in the diagram for an explanation; the tiles count what the map shows.
+
+![Process map step with the note pad open](docs/screenshots/2-process-map-with-notes.png)
+
+**Notes hidden, diagram full width.** Sliders drive the same model as the instructor's spreadsheet, with the results updating as you move them.
+
+![Queueing model with sliders, a live chart and result tiles](docs/screenshots/3-waiting-lines-notes-hidden.png)
+
+**Try the method yourself.** Switch the rule or the cycle time and watch the stations rebalance.
+
+![Line balancing with priority rules, station bars and a precedence diagram](docs/screenshots/4-line-balancing.png)
+
+**Type in the case's own numbers.** The table finds the bottleneck and applies Little's Law. Pages follow your light or dark setting.
+
+![Bottleneck table and chart in dark mode](docs/screenshots/5-bottleneck-dark-mode.png)
+
+**Frameworks as things you can switch.** Here, five kinds of customer variability, each with a way to accommodate it or reduce it.
+
+![Service variability cards in dark mode](docs/screenshots/6-service-variability-dark.png)
+
 ## What it does
 
 1. **Setup (once a term).** Asks for your Brightspace address and where to save files, lists your courses through the Brightspace API, and reads each course outline's AI policy.
