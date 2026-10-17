@@ -24,12 +24,20 @@ async function cnpSync(CFG) {
       if (!page.PagingInfo || !page.PagingInfo.HasMoreItems) break;
       bm = page.PagingInfo.Bookmark;
     }
-    const now = Date.now();
+    const now = Date.now(), day = 864e5;
+    // "Current": real start/end dates if the course has them; else a term code like 202609 (Fall 2026) in its code;
+    // else opened in the last 3 weeks. Many schools leave course dates empty.
+    const isCurrent = (i) => {
+      const s = i.Access.StartDate && Date.parse(i.Access.StartDate), e = i.Access.EndDate && Date.parse(i.Access.EndDate);
+      if (s && e) return s < now + 45 * day && e > now - 7 * day;
+      const t = /\b(20\d{2})(0[1-9]|1[0-2])\b/.exec(i.OrgUnit.Code + " " + i.OrgUnit.Name);
+      if (t) { const ts = Date.UTC(+t[1], +t[2] - 1, 1); return ts < now + 45 * day && ts > now - 140 * day; }
+      return !!i.Access.LastAccessed && Date.parse(i.Access.LastAccessed) > now - 21 * day;
+    };
     const courses = out.filter((i) => i.Access && i.Access.CanAccess).map((i) => ({
       ou: i.OrgUnit.Id, code: i.OrgUnit.Code, name: i.OrgUnit.Name,
       start: i.Access.StartDate, end: i.Access.EndDate, active: i.Access.IsActive,
-      current: (!i.Access.StartDate || Date.parse(i.Access.StartDate) < now + 45 * 864e5) && (!i.Access.EndDate || Date.parse(i.Access.EndDate) > now - 7 * 864e5),
-      last: i.Access.LastAccessed
+      current: isCurrent(i), last: i.Access.LastAccessed
     })).sort((a, b) => (b.current - a.current) || String(b.last || "").localeCompare(String(a.last || "")));
     return { site: location.origin, user: who ? who.FirstName : null, le: LE, lp: LP, courses };
   }
@@ -42,7 +50,9 @@ async function cnpSync(CFG) {
   const files = [], manifest = { generated: new Date().toISOString(), site: location.origin, le: LE, courses: [], skipped: [] };
 
   for (const ou of ous) {
-    const info = (await tryJ(`/d2l/api/lp/${LP}/courses/${ou}`)) || {};
+    // Students usually get 403 on /courses/{ou}; their own enrollment record carries the code and name.
+    const enr = await tryJ(`/d2l/api/lp/${LP}/enrollments/myenrollments/${ou}`);
+    const info = (enr && enr.OrgUnit) || (await tryJ(`/d2l/api/lp/${LP}/courses/${ou}`)) || {};
     const code = clean(info.Code || "course-" + ou), C = { ou, code, name: info.Name || "", modules: [], links: [], calendar: [], assignments: [], news: [] };
     const toc = await tryJ(`/d2l/api/le/${LE}/${ou}/content/toc`);
     const walk = (mods, path) => (mods || []).forEach((m) => {
@@ -62,6 +72,9 @@ async function cnpSync(CFG) {
     if (toc) walk(toc.Modules, []); else manifest.skipped.push({ ou, what: "content" });
     const cal = (await tryJ(`/d2l/api/le/${LE}/${ou}/calendar/events/`)) || [];
     C.calendar = (Array.isArray(cal) ? cal : cal.Objects || []).map((e) => ({ title: e.Title, start: e.StartDateTime || e.StartDay, end: e.EndDateTime || e.EndDay, allDay: e.IsAllDayEvent, location: e.LocationName || e.Location || "", text: (e.Description || "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 400) }));
+    // Course shells copied from an earlier year keep that year's calendar dates. Flag them; trust the outline instead.
+    const yr = new Date().getFullYear(), stale = C.calendar.filter((e) => e.start && +String(e.start).slice(0, 4) < yr);
+    if (C.calendar.length && stale.length > C.calendar.length / 2) C.calendarWarning = stale.length + " of " + C.calendar.length + " calendar events are dated before " + yr + "; the course calendar was probably copied from an old shell. Use the course outline for session dates.";
     const drop = (await tryJ(`/d2l/api/le/${LE}/${ou}/dropbox/folders/`)) || [];
     drop.forEach((f) => {
       C.assignments.push({ name: f.Name, due: f.DueDate, end: f.Availability && f.Availability.EndDate, points: f.Assessment && f.Assessment.ScoreDenominator, instructions: ((f.CustomInstructions && f.CustomInstructions.Text) || "").slice(0, 3000), files: (f.Attachments || []).map((a) => a.FileName) });
@@ -76,7 +89,7 @@ async function cnpSync(CFG) {
   }
 
   if (CFG.mode === "plan") {
-    return { files: files.length, sample: files.slice(0, 40).map((f) => f.path), links: manifest.courses.reduce((a, c) => a + c.links.length, 0), calendarEvents: manifest.courses.reduce((a, c) => a + c.calendar.length, 0), assignments: manifest.courses.reduce((a, c) => a + c.assignments.length, 0), knownBytes: files.reduce((a, f) => a + (f.size || 0), 0) };
+    return { files: files.length, sample: files.slice(0, 40).map((f) => f.path), warnings: manifest.courses.filter((c) => c.calendarWarning).map((c) => c.code + ": " + c.calendarWarning), links: manifest.courses.reduce((a, c) => a + c.links.length, 0), calendarEvents: manifest.courses.reduce((a, c) => a + c.calendar.length, 0), assignments: manifest.courses.reduce((a, c) => a + c.assignments.length, 0), knownBytes: files.reduce((a, f) => a + (f.size || 0), 0) };
   }
 
   // mode "zip": fetch every file, build one uncompressed zip (no library needed), download it once.

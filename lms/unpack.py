@@ -46,12 +46,15 @@ def safe_name(s):
     return s[:90] or "course"
 
 
-def course_folder(root, cfg, code, name):
-    """Folder for a course, always inside root. Config folders may be nested (a/b); zip names may not."""
+def course_folder(root, cfg, code, name, ou=None):
+    """Folder for a course, always inside root. Matched by Brightspace id first, then by code
+    (LMS codes are often long, e.g. "202609 OPS 500 A01", so a config code contained in it also matches)."""
     folder = None
     for c in cfg.get("courses", []):
-        if c.get("code", "").lower() == code.lower() or str(c.get("ou")) == code:
+        cc = (c.get("code") or "").lower()
+        if (ou is not None and str(c.get("ou")) == str(ou)) or (cc and (cc == code.lower() or cc in code.lower())):
             folder = c.get("folder")
+            break
     if folder:
         parts = [safe_name(p) for p in re.split(r"[\\/]+", folder) if p and p != ".."]
     else:
@@ -90,7 +93,7 @@ def main():
     events["events"] = [e for e in events["events"] if e.get("ou") not in [c["ou"] for c in man["courses"]]]
     written = kept = 0
     for c in man["courses"]:
-        folder = course_folder(root, cfg, c["code"], c["name"])
+        folder = course_folder(root, cfg, c["code"], c["name"], c.get("ou"))
         mat = os.path.join(folder, "materials")
         os.makedirs(mat, exist_ok=True)
         prefix = c["code"] + "/"
@@ -132,6 +135,8 @@ def main():
             body += "<section><h2>%s</h2>%s</section>" % (title, "<table>%s%s</table>" % (head, rows) if rows else "<p class=m>None.</p>")
         open(os.path.join(folder, "Course_Index.html"), "w", encoding="utf-8").write(page(c["code"] + " index", body))
         print("%s -> %s (%d files)" % (c["code"], folder, len(local_files)))
+        if c.get("calendarWarning"):
+            print("  WARNING:", c["calendarWarning"])
     events["events"].sort(key=lambda e: e.get("start") or "")
     events["updated"] = man["generated"]
     os.makedirs(root, exist_ok=True)

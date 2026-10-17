@@ -34,7 +34,8 @@ The student's own settings live in `~/.class-notes-page/config.json` (see `confi
 2. `await cnpSync({mode:"zip", courses:[...]})` downloads ONE zip (never trigger many separate downloads). Find it in the Downloads folder.
 3. `python lms/unpack.py <zip>` files everything under `<root>/<course folder>/materials/` and writes `Course_Index.html` and `<root>/lms_events.json`. Delete the zip afterwards only if the student agrees.
 4. Readings that are links (library databases, publisher sites, purchased case packs) cannot be downloaded this way: they are listed in `Course_Index.html`. Open them in the browser only to read; ask before saving any file.
-5. Build or update `<root>/schedule.json` (schema in `schedule/upcoming.py`): class sessions from calendar events and the outline's session table (outlines are the most reliable source for topics and readings), deadlines from assignment due dates. Run `python schedule/upcoming.py` to write `Schedule.html` and see what is coming.
+5. **Check the calendar's dates.** Course shells copied from an earlier year often keep that year's events (the sync flags this as a calendar warning). Course outlines win over the LMS calendar for session dates; assignment due dates in the dropbox are usually current.
+6. Build or update `<root>/schedule.json` (schema in `schedule/upcoming.py`): class sessions from calendar events and the outline's session table (outlines are the most reliable source for topics and readings), deadlines from assignment due dates. Run `python schedule/upcoming.py` to write `Schedule.html` and see what is coming.
 
 Re-sync whenever the student asks, or at the start of a "prep" request if the last sync (`lms_events.json` "updated") is more than a few days old. If Brightspace is signed out, build from what is already on disk and say so.
 
