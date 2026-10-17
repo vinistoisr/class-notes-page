@@ -403,9 +403,9 @@ section.topic.files{grid-template-columns:minmax(0,1fr)}
       <p class="idea">With random arrivals, waiting time does not rise in a straight line. It <mark>shoots up as utilization nears 100%</mark>. A second server, or one shared line, cuts it sharply.</p>
       <div class="viz">
         <div class="controls">
-          <div class="ctl"><label for="q-lam">Arrival rate λ (per hour) <output id="q-lam-out"></output></label><input type="range" id="q-lam" min="0.5" max="20" step="0.5" value="3"></div>
+          <div class="ctl"><label for="q-lam">Arrival rate λ (per hour) <output id="q-lam-out"></output></label><input type="range" id="q-lam" min="0.5" max="30" step="0.5" value="3"></div>
           <div class="ctl"><label for="q-mu">Service rate μ per server (per hour) <output id="q-mu-out"></output></label><input type="range" id="q-mu" min="1" max="20" step="0.5" value="4"></div>
-          <div class="ctl"><label for="q-s">Servers s <output id="q-s-out"></output></label><input type="range" id="q-s" min="1" max="6" step="1" value="1"></div>
+          <div class="ctl"><label for="q-s">Servers s <output id="q-s-out"></output></label><input type="range" id="q-s" min="1" max="10" step="1" value="1"></div>
         </div>
         <div class="chart"><svg id="q-chart" viewBox="0 0 680 270" role="img" aria-label="Average wait in the queue, in minutes, against utilization, for one, two and three servers. A dot marks the current settings."></svg></div>
         <p class="cap">Same model as the instructor's "Waiting Line Single Server" and "Multiple Servers" spreadsheets (M/M/1 and M/M/s). The defaults (λ = 3, μ = 4, s = 1) match the spreadsheets.</p>
