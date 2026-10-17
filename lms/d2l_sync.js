@@ -62,7 +62,7 @@ async function cnpSync(CFG) {
         const isFile = t.TypeIdentifier === "File" && t.Url && !/^https?:/i.test(t.Url);
         if (isFile) {
           let name = clean(t.Title); const ext = extOf(t.Url); if (ext && !name.toLowerCase().endsWith(ext)) name += ext;
-          files.push({ path: [code, "content"].concat(p, [name]).join("/"), url: `/d2l/api/le/${LE}/${ou}/content/topics/${t.TopicId}/file`, title: t.Title, module: p.join(" / "), ou });
+          files.push({ path: [code, "content"].concat(p, [name]).join("/"), url: `/d2l/api/le/${LE}/${ou}/content/topics/${t.TopicId}/file`, view: `${location.origin}/d2l/le/content/${ou}/viewContent/${t.TopicId}/View`, title: t.Title, module: p.join(" / "), ou });
         } else {
           C.links.push({ module: p.join(" / "), title: t.Title, url: t.Url && t.Url.startsWith("/") ? location.origin + t.Url : t.Url, type: t.TypeIdentifier, due: t.DueDateTime });
         }
@@ -78,12 +78,12 @@ async function cnpSync(CFG) {
     const drop = (await tryJ(`/d2l/api/le/${LE}/${ou}/dropbox/folders/`)) || [];
     drop.forEach((f) => {
       C.assignments.push({ name: f.Name, due: f.DueDate, end: f.Availability && f.Availability.EndDate, points: f.Assessment && f.Assessment.ScoreDenominator, instructions: ((f.CustomInstructions && f.CustomInstructions.Text) || "").slice(0, 3000), files: (f.Attachments || []).map((a) => a.FileName) });
-      (f.Attachments || []).forEach((a) => files.push({ path: [code, "assignments", clean(f.Name), clean(a.FileName)].join("/"), url: `/d2l/api/le/${LE}/${ou}/dropbox/folders/${f.Id}/attachments/${a.FileId}`, size: a.Size, title: a.FileName, module: "Assignments", ou }));
+      (f.Attachments || []).forEach((a) => files.push({ path: [code, "assignments", clean(f.Name), clean(a.FileName)].join("/"), url: `/d2l/api/le/${LE}/${ou}/dropbox/folders/${f.Id}/attachments/${a.FileId}`, view: `${location.origin}/d2l/lms/dropbox/user/folder_submit_files.d2l?db=${f.Id}&ou=${ou}`, size: a.Size, title: a.FileName, module: "Assignments", ou }));
     });
     const news = (await tryJ(`/d2l/api/le/${LE}/${ou}/news/`)) || [];
     news.forEach((n) => {
       C.news.push({ title: n.Title, date: n.StartDate, text: ((n.Body && n.Body.Text) || "").slice(0, 2000) });
-      (n.Attachments || []).forEach((a) => files.push({ path: [code, "announcements", clean(a.FileName)].join("/"), url: `/d2l/api/le/${LE}/${ou}/news/${n.Id}/attachments/${a.FileId}`, size: a.Size, title: a.FileName, module: "Announcements", ou }));
+      (n.Attachments || []).forEach((a) => files.push({ path: [code, "announcements", clean(a.FileName)].join("/"), url: `/d2l/api/le/${LE}/${ou}/news/${n.Id}/attachments/${a.FileId}`, view: `${location.origin}/d2l/home/${ou}`, size: a.Size, title: a.FileName, module: "Announcements", ou }));
     });
     manifest.courses.push(C);
   }
@@ -122,7 +122,7 @@ async function cnpSync(CFG) {
       total += b.length; f.bytes = b.length; add(f.path, b);
     } catch (e) { manifest.skipped.push({ path: f.path, why: String(e) }); }
   }
-  manifest.files = files.filter((f) => f.bytes).map((f) => ({ path: f.path, title: f.title, module: f.module, bytes: f.bytes }));
+  manifest.files = files.filter((f) => f.bytes).map((f) => ({ path: f.path, title: f.title, module: f.module, bytes: f.bytes, view: f.view, ou: f.ou }));
   add("manifest.json", enc.encode(JSON.stringify(manifest, null, 1)));
   const cdSize = central.reduce((a, x) => a + x.byteLength, 0), e = new DataView(new ArrayBuffer(22));
   e.setUint32(0, 0x06054b50, true); e.setUint16(8, count, true); e.setUint16(10, count, true); e.setUint32(12, cdSize, true); e.setUint32(16, offset, true);

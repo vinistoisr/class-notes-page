@@ -221,3 +221,14 @@ textarea{min-height:140px}
 .readout span{font-size:12px;line-height:1.25}
 .take{font-size:14.5px}
 @media (max-width:960px){html{scroll-snap-type:none}}
+
+/* Files for this class */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:8px}
+.fcard{display:grid;grid-template-columns:28px minmax(0,1fr);gap:4px 10px;align-items:start;background:var(--bg);border-radius:10px;padding:10px 12px}
+.ficon{width:26px;height:26px;fill:none;stroke:var(--accent);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round}
+.k-spreadsheet .ficon{stroke:var(--good)} .k-link .ficon{stroke:var(--signal)} .k-slides .ficon{stroke:var(--signal)}
+.ftext{min-width:0} .ftext b{display:block;font-size:14.5px;line-height:1.3;overflow-wrap:anywhere} .ftext small{color:var(--muted);font-size:12.5px}
+.factions{grid-column:2;display:flex;flex-wrap:wrap;gap:6px}
+.fbtn{font:600 12.5px var(--body);color:var(--accent);background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:3px 10px;text-decoration:none;cursor:pointer}
+.fbtn:hover{border-color:var(--accent)} .fbtn.pri{background:var(--accent);color:var(--paper);border-color:var(--accent)}
+section.topic.files{grid-template-columns:minmax(0,1fr)}

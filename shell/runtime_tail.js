@@ -105,6 +105,70 @@
     });
   })();
 
+
+  // ---------- Files for this class ----------
+  // Brightspace link always works (signed-in browser). A direct link to the downloaded copy works only when the
+  // page itself is opened from disk: browsers block file:// links from web pages, so there we offer "Copy path".
+  (function(){
+    var box=document.getElementById("files-grid");if(!box||!PAGE.files||!PAGE.files.length)return;
+    var local=location.protocol==="file:";
+    var ICON={reading:"M6 3h8l4 4v14H6z M14 3v4h4 M9 12h6 M9 15h6 M9 18h4",spreadsheet:"M4 4h16v16H4z M4 9h16 M4 14h16 M10 4v16",slides:"M3 4h18v12H3z M12 16v4 M8 20h8",
+      document:"M6 3h8l4 4v14H6z M14 3v4h4 M9 11h6 M9 14h6",link:"M10 14a4 4 0 0 0 6 0l3-3a4 4 0 0 0-6-6l-1 1 M14 10a4 4 0 0 0-6 0l-3 3a4 4 0 0 0 6 6l1-1",video:"M3 5h13v14H3z M16 10l5-3v10l-5-3",file:"M6 3h8l4 4v14H6z M14 3v4h4"};
+    var LAB={reading:"Reading",spreadsheet:"Spreadsheet",slides:"Slides",document:"Document",link:"Web link",video:"Video",file:"File",case:"Case",page:"Page"};
+    function fileUrl(p){return "file:///"+p.replace(/\\/g,"/").split("/").map(encodeURIComponent).join("/").replace(/^([A-Za-z])%3A/,"$1:")}
+    function btn(tag,text,cls){var b=document.createElement(tag);b.className="fbtn"+(cls?" "+cls:"");b.textContent=text;return b}
+    PAGE.files.forEach(function(f){
+      var k=f.kind||"file",d=document.createElement("div");d.className="fcard k-"+k;
+      var ic=document.createElementNS(NS,"svg");ic.setAttribute("viewBox","0 0 24 24");ic.setAttribute("aria-hidden","true");ic.setAttribute("class","ficon");
+      var pth=document.createElementNS(NS,"path");pth.setAttribute("d",ICON[k]||ICON.file);ic.appendChild(pth);d.appendChild(ic);
+      var t=document.createElement("div");t.className="ftext";var b=document.createElement("b");b.textContent=f.title;t.appendChild(b);
+      var sm=document.createElement("small");sm.textContent=[LAB[k]||k,f.when,f.note].filter(Boolean).join(" · ");t.appendChild(sm);d.appendChild(t);
+      var acts=document.createElement("div");acts.className="factions";
+      if(f.url){var a=btn("a",k==="link"?"Open":"Open in Brightspace");a.href=f.url;a.target="_blank";a.rel="noopener";acts.appendChild(a)}
+      if(f.path&&local){var l=btn("a","Open my copy","pri");l.href=fileUrl(f.path);acts.appendChild(l)}
+      if(f.path){var c=btn("button","Copy path");c.type="button";c.title=f.path;c.addEventListener("click",function(){
+        function done(m){c.textContent=m;setTimeout(function(){c.textContent="Copy path"},1800)}
+        if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(f.path).then(function(){done("Copied")},function(){done("Path in tooltip")});else done("Path in tooltip")});acts.appendChild(c)}
+      d.appendChild(acts);box.appendChild(d)});
+    var cap=document.getElementById("files-cap");
+    if(cap)cap.textContent=local?"Open my copy opens the file downloaded to your folder. Open in Brightspace opens the course page for it.":"Open in Brightspace opens each file where you are signed in. Copy path gives the location of your downloaded copy (paste it in File Explorer or Finder). Open this page as a local file to get one-click links to your copies.";
+  })();
+
+  // ---------- Save notes as .txt or .pdf ----------
+  // In claude.ai the downloads capability asks the viewer to confirm, then saves to their downloads.
+  // Opened from disk, a normal browser download does the same.
+  (function(){
+    var msg=document.getElementById("copy-msg"),bt=document.getElementById("save-txt"),bp=document.getElementById("save-pdf");if(!bt)return;
+    function say(t){msg.textContent=t;setTimeout(function(){if(msg.textContent===t)msg.textContent=""},4000)}
+    var stamp=new Date().toISOString().slice(0,10),base=(PAGE.notesFile||PAGE.title||"Class notes").replace(/[\\\/:*?"<>|]/g,"-")+" notes "+stamp;
+    function collect(){return areas.map(function(a){var sec=a.closest("section"),lab=document.querySelector('label[for="'+a.id+'"]'),extra=lab&&lab.firstChild.textContent.trim()!=="Notes"?" ("+lab.firstChild.textContent.trim()+")":"";
+      return {h:sec.querySelector("h2").textContent+extra,t:a.value.trim()}})}
+    async function deliver(name,data){
+      var dl=null;try{dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null}catch(e){dl=null}
+      if(dl){try{await dl.save({filename:name,data:data});return "Saved "+name}catch(e){
+        if(e&&e.code==="declined")return "Not saved";if(e&&e.code==="rate_limited")return "A save prompt is already open";
+        if(!(e&&/unavailable|not_granted|capability/.test(e.code||"")))return "Could not save: "+((e&&e.message)||"unknown error")}}
+      var blob=data instanceof Blob?data:new Blob([data],{type:"text/plain;charset=utf-8"}),u=URL.createObjectURL(blob),a=document.createElement("a");
+      a.href=u;a.download=name;document.body.appendChild(a);a.click();setTimeout(function(){URL.revokeObjectURL(u);a.remove()},30000);
+      return location.protocol==="file:"?"Saved "+name+" to your downloads":"If nothing downloaded, use Copy all notes"}
+    bt.addEventListener("click",async function(){var parts=collect(),out=(PAGE.title||"")+"\n"+(PAGE.eyebrow||"")+"\nSaved "+new Date().toLocaleString()+"\n\n"+
+      parts.map(function(p){return "## "+p.h+"\n"+(p.t||"(no notes)")}).join("\n\n")+"\n";say(await deliver(base+".txt",out))});
+    var jsPdfP=null;
+    function loadPdf(){if(window.jspdf)return Promise.resolve(window.jspdf);if(jsPdfP)return jsPdfP;jsPdfP=new Promise(function(res,rej){var s=document.createElement("script");
+      s.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";s.onload=function(){res(window.jspdf)};s.onerror=function(){jsPdfP=null;rej(new Error("PDF library did not load"))};document.head.appendChild(s)});return jsPdfP}
+    // Built-in PDF fonts cover Latin-1 only; spell out the Greek letters and symbols these pages use.
+    var SUB={"λ":"lambda","μ":"mu","ρ":"rho","σ":"sigma","Σ":"Sum","≥":">=","≤":"<=","≈":"~","→":"->","←":"<-","−":"-","–":"-","—":"-","×":"x","÷":"/","…":"...","‘":"'","’":"'","“":'"',"”":'"',"•":"-","·":"-"};
+    function latin(s){return String(s).replace(/[^\x00-\xff]/g,function(c){return SUB[c]!=null?SUB[c]:"?"})}
+    bp.addEventListener("click",async function(){
+      say("Making PDF...");var lib;try{lib=await loadPdf()}catch(e){say("PDF library did not load; use Save notes (.txt)");return}
+      var doc=new lib.jsPDF({unit:"pt",format:"letter"}),W=doc.internal.pageSize.getWidth(),H=doc.internal.pageSize.getHeight(),M=54,y=M;
+      function need(h){if(y+h>H-M){doc.addPage();y=M}}
+      function para(text,size,style,gap){doc.setFont("helvetica",style);doc.setFontSize(size);doc.splitTextToSize(latin(text),W-2*M).forEach(function(line){need(size*1.35);doc.text(line,M,y);y+=size*1.35});y+=gap||0}
+      para(PAGE.title||"Class notes",18,"bold",2);if(PAGE.eyebrow)para(PAGE.eyebrow,10,"normal",0);para("Saved "+new Date().toLocaleString(),10,"normal",12);
+      collect().forEach(function(p){need(40);para(p.h,13,"bold",2);para(p.t||"(no notes)",11,"normal",12)});
+      say(await deliver(base+".pdf",doc.output("blob")))});
+  })();
+
   // Sticky bar height drives scroll offsets and chart heights.
   (function(){var bar=document.getElementById("topbar");function set(){document.documentElement.style.setProperty("--navh",bar.offsetHeight+"px")}set();window.addEventListener("resize",set)})();
 

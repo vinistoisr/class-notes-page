@@ -30,7 +30,7 @@ def lint(sections, app):
     warn = []
     for m in re.finditer(r'<section class="topic" id="([^"]+)"(.*?)</section>', sections, re.S):
         sid, inner = m.group(1), m.group(2)
-        if sid in ("glossary", "takeaways"):
+        if sid in ("glossary", "takeaways", "files"):
             continue
         if "<svg" not in inner and not re.search(r'class="(chips|controls|steps|vgrid|mgrid|args|flow5|lever|fit)"', inner):
             warn.append(sid + ": no diagram or interactive control")
@@ -77,6 +77,22 @@ def main():
     lint(sections, app)
 
     e = html.escape
+    # Files section (readings, case, spreadsheets) from page.json "files": [{title, kind, path, url, note, when}]
+    files = cfg.get("files") or []
+    files_section = ""
+    if files:
+        files_section = """<section class="topic files" id="files" data-nav="Files">
+    <div class="main nosplit">
+      <div class="head"><span class="num">F</span><h2>Files for this class</h2></div>
+      <div class="viz"><div class="fgrid" id="files-grid"></div></div>
+      <p class="cap" id="files-cap"></p>
+    </div>
+  </section>
+
+  """
+        nav.insert(0, '    <a href="#files"><i>F</i>Files</a>')
+    page_js = json.dumps({"notesKey": cfg["notes_key"], "notesDoc": cfg["notes_doc"], "title": cfg["title"], "eyebrow": re.sub("<[^>]+>", "", cfg["eyebrow"]),
+                          "notesFile": cfg.get("notes_file", cfg["title"]), "files": files}, ensure_ascii=False).replace("</", "<\\/")
     page = f'''<title>{e(cfg["title"])}</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -98,6 +114,8 @@ def main():
   <div class="statusbar">
     <span id="save-status" class="pill">Notes: saving on this device</span>
     <button type="button" id="copy-all">Copy all notes</button>
+    <button type="button" id="save-txt">Save notes (.txt)</button>
+    <button type="button" id="save-pdf">Save notes (.pdf)</button>
     <span id="copy-msg" aria-live="polite"></span>
   </div>
 
@@ -111,7 +129,7 @@ def main():
     </div>
   </div>
 
-{sections.strip()}
+{files_section}{sections.strip()}
 
   <footer>{cfg.get("footer", "")}</footer>
 </div>
@@ -119,7 +137,7 @@ def main():
 <script>
 (function(){{
   "use strict";
-  var PAGE={json.dumps({"notesKey": cfg["notes_key"], "notesDoc": cfg["notes_doc"]})};
+  var PAGE={page_js};
 {read(os.path.join(SHELL, "runtime_head.js"))}
 {app}
 {read(os.path.join(SHELL, "runtime_tail.js"))}

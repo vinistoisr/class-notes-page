@@ -64,7 +64,7 @@ Keep source next to the course material: `<root>/<course folder>/pages/session<N
 
 | File | Content |
 |---|---|
-| `page.json` | `title` (2 to 4 word name), `eyebrow` (course · session · date · topic), `h1`, `lede`, `notes_key` and `notes_doc` (unique per page), `fonts` (Google Fonts URL), `footer` (sources) |
+| `page.json` | `title` (2 to 4 word name), `eyebrow` (course · session · date · topic), `h1`, `lede`, `notes_key` and `notes_doc` (unique per page), `notes_file` (name for saved notes, e.g. "OPS 500 Session 4"), `fonts` (Google Fonts URL), `footer` (sources), `files` (below) |
 | `tokens.css` | Palette and font tokens chosen for this subject: `--bg --paper --ink --muted --line --accent --accent-soft --signal --signal-soft --good --good-soft --bad --bad-soft --pad --padline --display --body --mono` (add your own), in `:root`, then the dark values under `@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){...}}` and `:root[data-theme="dark"]{...}`. A new palette and type pairing for each course. |
 | `sections.html` | The steps (skeleton below) and group labels. |
 | `app.js` | One IIFE per step that draws and wires it. |
@@ -88,6 +88,10 @@ Keep source next to the course material: `<root>/<course folder>/pages/session<N
 </section>
 ```
 
+**Files step.** List the session's readings, case, slides and every spreadsheet used in class in `page.json` as `"files": [{"title", "kind": "reading|case|spreadsheet|slides|document|video|link", "url", "path", "note"}]`. Take `url` (the Brightspace page) and `path` (the downloaded copy) from the course's `files.json` written by `unpack.py`; `note` says when it's used ("Read before class", "Used in step 4"). The build adds a "Files" step at the top with one-click Brightspace links, "Open my copy" when the page is opened as a local file, and "Copy path" otherwise (web pages can't open local files).
+
+**Saving notes.** Every page has "Save notes (.txt)" and "Save notes (.pdf)" in the status bar. In claude.ai this needs the `downloads` capability (see Publish); the viewer confirms and the file goes to their downloads. Opened as a local file, it is a normal download.
+
 **Screen-fit layout.** The shell puts `.head` and `.idea` across the top, every `.viz` in the left column and everything else (readouts, cards, details, takeaway) on the right, then balances the columns. Keep readouts and cards outside `.viz`. `class="viz side"` or `data-col="b"` sends a block right; `data-col="a"` keeps one left; `<div class="main nosplit">` uses the full width; `data-cols="wideA"` or `"even"` on `.main` changes the split.
 
 **Helpers available in app.js** (one strict IIFE): `el(tag, attrs, parent)`, `txt(parent, x, y, text, {anchor, fill, size, weight, mono, disp})`, `lines()`, `clear(svg)`, `arrowDef(svg, id, color)`, `card(id, title, subtitle, body)`, `hit(g, label, fn)` (keyboard-accessible SVG button), `chipset(box, labels, start, fn)`, `tiles(id, [[value, label, color?]])`, `ls(key, default)` / `lsw(key, value)`, `f1()`, `f2()`, `fmt()`. Never use `alert`, `confirm` or `prompt`.
@@ -101,7 +105,7 @@ node check_fit.js "<page_dir>/page.html" --all --shots "<temp dir>/shots"
 Fix every "TOO TALL" (move blocks between columns, shorten idea/takeaway/tile labels, trim a viewBox) and every QUALITY warning. Then **look at every screenshot** and fix overlapping labels, clipped text, empty-looking steps and charts that don't explain themselves. Do this before showing the page; the student should not have to ask for "more visual" or "fit on screen".
 
 ### Publish and file
-- With the claude.ai Artifact tool: publish `page.html` with `icon: "notes"`, a one-sentence `description` and `capabilities: {"db": {}, "user": {}}` (private notes need both). Republish later to the same URL.
+- With the claude.ai Artifact tool: publish `page.html` with `icon: "notes"`, a one-sentence `description` and `capabilities: {"db": {}, "user": {}, "downloads": true}` (private notes need db and user; the save buttons need downloads). Republish later to the same URL.
 - Without it: the page works as a local file opened in a browser (notes then save in that browser only).
 - Copy `page.html` to `<root>/<course folder>/Session<N>_<Topic>.html`, set the session's `page` status and URL in `schedule.json`, re-run `schedule/upcoming.py`.
 - Reply briefly: the link, one line per step, what couldn't be read, what is illustrative.

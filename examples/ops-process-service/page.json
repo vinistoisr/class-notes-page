@@ -7,5 +7,35 @@
  "notes_doc": "cnpexampleops",
  "fonts": "https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap",
  "footer": "Sources: Instructor spreadsheets (Waiting Line Single Server, Waiting Line Multiple Servers, Line Balancing). Frei, F.X. (2006), HBR 84(11). Gereffi, G., Humphrey, J. and Sturgeon, T. (2005), Review of International Political Economy 12(1). Ponte, S., Gereffi, G. and Raj-Reichert, G. (2019), Handbook on Global Value Chains. O'Donovan, B. et al. (2005), Design Process Improvement. Class study aid, Oct 17, 2026.",
- "out": "page.html"
+ "out": "page.html",
+ "notes_file": "OPS example session 4",
+ "files": [
+  {
+   "title": "Redesigning Trauma Operations at University Hospital",
+   "kind": "reading",
+   "note": "Case, read before class",
+   "url": "https://brightspace.example.edu/d2l/le/content/123456/viewContent/1001/View",
+   "path": "C:/Users/you/OneDrive/Fall 2026/OPS 500 - Operations/materials/content/Week 4/Trauma case.pdf"
+  },
+  {
+   "title": "Waiting Line Multiple Servers",
+   "kind": "spreadsheet",
+   "note": "Used in class for step 4",
+   "url": "https://brightspace.example.edu/d2l/le/content/123456/viewContent/1002/View",
+   "path": "C:/Users/you/OneDrive/Fall 2026/OPS 500 - Operations/materials/content/Week 4/Waiting Line Multiple Servers.xlsx"
+  },
+  {
+   "title": "Line Balancing",
+   "kind": "spreadsheet",
+   "note": "Used in class for step 5",
+   "url": "https://brightspace.example.edu/d2l/le/content/123456/viewContent/1003/View",
+   "path": "C:/Users/you/OneDrive/Fall 2026/OPS 500 - Operations/materials/content/Week 4/Line Balancing.xlsx"
+  },
+  {
+   "title": "Design planning and modelling (O'Donovan et al., 2005)",
+   "kind": "link",
+   "note": "Library link",
+   "url": "https://link.springer.com/"
+  }
+ ]
 }

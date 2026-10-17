@@ -113,6 +113,20 @@ def main():
                     f.write(z.read(info))
                 written += 1
             local_files.append(rel)
+        # files.json: what a study page's Files section needs (title, local path, Brightspace page, kind)
+        kinds = {".xlsx": "spreadsheet", ".xls": "spreadsheet", ".xlsm": "spreadsheet", ".csv": "spreadsheet", ".pptx": "slides", ".ppt": "slides",
+                 ".pdf": "reading", ".docx": "document", ".doc": "document", ".html": "page", ".mp4": "video"}
+        flist = []
+        for f in man.get("files", []):
+            if not f["path"].startswith(prefix):
+                continue
+            rel = f["path"][len(prefix):]
+            flist.append({"title": f.get("title") or os.path.basename(rel), "module": f.get("module", ""), "path": os.path.join(mat, *rel.split("/")),
+                          "url": f.get("view", ""), "kind": kinds.get(os.path.splitext(rel)[1].lower(), "file")})
+        for l in c["links"]:
+            if l.get("type") == "Link" and l.get("url"):
+                flist.append({"title": l["title"], "module": l["module"], "path": "", "url": l["url"], "kind": "link"})
+        json.dump(flist, open(os.path.join(folder, "files.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
         # events for the schedule
         for e in c["calendar"]:
             events["events"].append({"ou": c["ou"], "course": c["code"], "kind": "calendar", "title": e["title"], "start": local(e["start"], tz), "end": local(e["end"], tz), "location": e.get("location", ""), "text": e.get("text", "")})
