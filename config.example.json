@@ -3,7 +3,10 @@
   "school": "Example University",
   "term": "Fall 2026",
   "timezone": "America/Vancouver",
-  "lms": { "type": "d2l", "base_url": "https://brightspace.example.edu" },
+  "lms": {
+    "type": "d2l",
+    "base_url": "https://brightspace.example.edu"
+  },
   "root": "C:/Users/you/OneDrive - Example University/Fall 2026",
   "build_ahead_days": 2,
   "publish": "artifact",
@@ -15,7 +18,9 @@
       "folder": "OPS 500 - Operations Management",
       "instructor": "Prof. Example",
       "ai_policy": "brainstorming and editing allowed with disclosure; no AI analysis of graded cases",
-      "ai_policy_source": "Course outline p. 4"
+      "ai_policy_source": "Course outline p. 4",
+      "course_url": "https://brightspace.example.edu/d2l/home/123456",
+      "instructor_scholar": "https://scholar.google.com/citations?user=XXXXXXXXXXXX"
     }
   ]
 }

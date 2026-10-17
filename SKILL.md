@@ -26,7 +26,7 @@ The student's own settings live in `~/.class-notes-page/config.json` (see `confi
 1. If `~/.class-notes-page/config.json` is missing, ask only what you can't discover: the Brightspace address (e.g. `https://brightspace.school.edu`) and the folder to save into (suggest their university OneDrive or Documents). Detect the time zone from the computer.
 2. Open Brightspace in the browser tool (Claude in Chrome). If the page is a sign-in page, **stop and ask the student to sign in themselves**. Never type, autofill or submit credentials.
 3. Read `lms/d2l_sync.js`, run its text in the page, then `await cnpSync({mode:"discover"})`. Show the current-term courses; confirm which ones to include.
-4. Write the config with each course's `code`, `name`, `ou`, `folder`. Find each course outline (step 1 below), read its **AI policy** and store a one-line summary plus source in `ai_policy`. If no policy is found, store "unknown: check with the instructor".
+4. Write the config with each course's `code`, `name`, `ou`, `folder`, `course_url` (`<lms base>/d2l/home/<ou>`), `instructor` (from the outline) and `instructor_scholar`: search Google Scholar's author search in the browser (`https://scholar.google.com/citations?view_op=search_authors&mauthors=<name>`) and keep the profile only if its affiliation or verified email matches the school; otherwise leave it out. Find each course outline (step 1 below), read its **AI policy** and store a one-line summary plus source in `ai_policy`. If no policy is found, store "unknown: check with the instructor".
 
 ## 1. Sync course material
 
@@ -64,7 +64,7 @@ Keep source next to the course material: `<root>/<course folder>/pages/session<N
 
 | File | Content |
 |---|---|
-| `page.json` | `title` (2 to 4 word name), `eyebrow` (course · session · date · topic), `h1`, `lede`, `notes_key` and `notes_doc` (unique per page), `notes_file` (name for saved notes, e.g. "OPS 500 Session 4"), `fonts` (Google Fonts URL), `footer` (sources), `files` (below) |
+| `page.json` | `title` (2 to 4 word name), `eyebrow` (course · session · date · topic), `h1`, `lede`, `notes_key` and `notes_doc` (unique per page), `notes_file` (name for saved notes, e.g. "OPS 500 Session 4"), `instructor` (`{"name", "scholar", "page"}` from the config; shown under the title with links), `course_url` and `course_label` (e.g. "OPS 500"; the build adds "on Brightspace"), `fonts` (Google Fonts URL), `footer` (sources), `files` (below) |
 | `tokens.css` | Palette and font tokens chosen for this subject: `--bg --paper --ink --muted --line --accent --accent-soft --signal --signal-soft --good --good-soft --bad --bad-soft --pad --padline --display --body --mono` (add your own), in `:root`, then the dark values under `@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){...}}` and `:root[data-theme="dark"]{...}`. A new palette and type pairing for each course. |
 | `sections.html` | The steps (skeleton below) and group labels. |
 | `app.js` | One IIFE per step that draws and wires it. |

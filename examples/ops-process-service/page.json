@@ -37,5 +37,11 @@
    "note": "Library link",
    "url": "https://link.springer.com/"
   }
- ]
+ ],
+ "instructor": {
+  "name": "Prof. Example",
+  "scholar": "https://scholar.google.com/"
+ },
+ "course_url": "https://brightspace.example.edu/d2l/home/123456",
+ "course_label": "OPS 500"
 }

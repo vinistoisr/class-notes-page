@@ -91,6 +91,18 @@ def main():
 
   """
         nav.insert(0, '    <a href="#files"><i>F</i>Files</a>')
+    # Instructor line: name, Google Scholar, and the course's Brightspace home. Only http(s) links.
+    def safe_url(u):
+        return e(u) if isinstance(u, str) and re.match(r"https?://", u, re.I) else ""
+    ins, bits = cfg.get("instructor") or {}, []
+    if ins.get("name"):
+        bits.append('<span class="who">Instructor <b>%s</b></span>' % e(ins["name"]))
+    for key, label in (("scholar", "Google Scholar"), ("page", "Faculty page")):
+        if safe_url(ins.get(key)):
+            bits.append('<a class="fbtn" href="%s" target="_blank" rel="noopener">%s</a>' % (safe_url(ins[key]), label))
+    if safe_url(cfg.get("course_url")):
+        bits.append('<a class="fbtn" href="%s" target="_blank" rel="noopener">%s on Brightspace</a>' % (safe_url(cfg["course_url"]), e(cfg.get("course_label", "Course page"))))
+    byline = ('    <p class="byline">%s</p>' % " ".join(bits) + chr(10)) if bits else ""
     page_js = json.dumps({"notesKey": cfg["notes_key"], "notesDoc": cfg["notes_doc"], "title": cfg["title"], "eyebrow": re.sub("<[^>]+>", "", cfg["eyebrow"]),
                           "notesFile": cfg.get("notes_file", cfg["title"]), "files": files}, ensure_ascii=False).replace("</", "<\\/")
     page = f'''<title>{e(cfg["title"])}</title>
@@ -108,7 +120,7 @@ def main():
   <header>
     <div class="eyebrow">{cfg["eyebrow"]}</div>
     <h1>{cfg["h1"]}</h1>
-    <p class="lede">{cfg["lede"]}</p>
+{byline}    <p class="lede">{cfg["lede"]}</p>
   </header>
 
   <div class="statusbar">
