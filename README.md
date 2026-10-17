@@ -2,7 +2,7 @@
 
 A [Claude Code](https://claude.com/claude-code) skill for students. It pulls your course material from Brightspace into your own folders, keeps a schedule of your classes, and builds an interactive study page for each session before it happens.
 
-Each page walks through the session one step at a time. Every step has a diagram you can work with (sliders, clickable charts, process maps, draggable 2x2s, rating tables), a one-line takeaway, and a private note pad. Each step is laid out to fit one laptop screen, and you can hide all the note pads with one button (or the N key).
+Each page walks through the session one step at a time. Every step has a diagram you can work with (sliders, clickable charts, process maps, draggable 2x2s, rating tables), a one-line takeaway, and a private note pad. Each step is laid out to fit one laptop screen, and you can hide all the note pads with one button.
 
 Open `examples/ops-process-service/page.html` in a browser to see a finished page.
 
@@ -42,7 +42,7 @@ Your settings live in `~/.class-notes-page/config.json`, outside the skill folde
 | Path | Purpose |
 |---|---|
 | `SKILL.md` | Instructions Claude follows. |
-| `shell/` | Shared page shell: CSS, private notes, notes switch, screen-fit layout, keyboard shortcuts. |
+| `shell/` | Shared page shell: CSS, private notes, notes switch, screen-fit layout. |
 | `build.py` | Builds a page from a page folder; flags steps without a diagram or takeaway. |
 | `check_fit.js` | Measures each step at 1280x680 and 1536x730 with notes on and off; screenshots. |
 | `lms/d2l_sync.js` | Browser-side Brightspace sync (discover, plan, one-zip download). |

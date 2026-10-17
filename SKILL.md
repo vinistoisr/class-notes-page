@@ -11,7 +11,7 @@ Files in this skill:
 
 | Path | What it is |
 |---|---|
-| `shell/` | Page shell: CSS, private notes (claude.ai db with localStorage fallback), notes on/off switch, two-column screen-fit layout, keyboard (N, J, K). Don't rewrite it per page. |
+| `shell/` | Page shell: CSS, private notes (claude.ai db with localStorage fallback), notes on/off switch, two-column screen-fit layout. Don't rewrite it per page. |
 | `build.py` | Wraps a page folder in the shell; refuses em dashes; warns on steps without a diagram or takeaway. |
 | `check_fit.js` | Measures every step at laptop sizes (notes on/off), phone overflow, script errors; screenshots. Needs the global `puppeteer` npm package. |
 | `lms/d2l_sync.js` | Runs in the student's signed-in Brightspace tab: lists courses, plans, downloads one zip. |

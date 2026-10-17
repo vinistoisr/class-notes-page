@@ -124,7 +124,6 @@ def main():
 {chr(10).join(nav)}
     </nav>
     <div class="tb-actions">
-      <span class="kbd" title="Keyboard: J next step, K previous step, N notes on or off">J / K · N</span>
       <button type="button" id="notes-all" aria-pressed="true">Notes: on</button>
     </div>
   </div>

@@ -76,7 +76,7 @@
   });
 
 
-  // Note pads: per-step toggle plus one switch in the top bar for all of them (key N). Remembered in this browser.
+  // Note pads: per-step toggle plus one switch in the top bar for all of them Remembered in this browser.
   (function(){
     var NK=PAGE.notesKey+"-closed",closed={};
     try{closed=JSON.parse(localStorage.getItem(NK)||"{}")||{}}catch(e){}
@@ -84,25 +84,13 @@
     var all=document.getElementById("notes-all");
     function save(){try{localStorage.setItem(NK,JSON.stringify(closed))}catch(e){}}
     function paint(){var n=0;secs.forEach(function(sec){var c=!!closed[sec.id];if(c)n++;sec.classList.toggle("nc",c);var b=sec._nt;b.textContent=c?"Show notes":"Hide notes";b.setAttribute("aria-expanded",!c)});
-      var allClosed=n===secs.length;rebalance();all.textContent=allClosed?"Notes: off":"Notes: on";all.setAttribute("aria-pressed",!allClosed);all.title=(allClosed?"Show":"Hide")+" every notes panel (N)"}
+      var allClosed=n===secs.length;rebalance();all.textContent=allClosed?"Notes: off":"Notes: on";all.setAttribute("aria-pressed",!allClosed);all.title=(allClosed?"Show":"Hide")+" every notes panel"}
     secs.forEach(function(sec){var b=document.createElement("button");b.type="button";b.className="nt";b.setAttribute("aria-controls",sec.querySelector(":scope>.notes textarea").id);
       b.addEventListener("click",function(){closed[sec.id]=!closed[sec.id];save();paint();if(!closed[sec.id])sec.querySelector(":scope>.notes textarea").focus()});
       sec.querySelector(".head").appendChild(b);sec._nt=b});
     function toggleAll(){var close=all.getAttribute("aria-pressed")==="true";secs.forEach(function(sec){closed[sec.id]=close});save();paint()}
     all.addEventListener("click",toggleAll);
     paint();balance();
-    // Keyboard: N toggles all notes, J / K jump to the next / previous step.
-    var steps=[].slice.call(document.querySelectorAll("section.topic"));
-    document.addEventListener("keydown",function(e){
-      var t=e.target,typing=t&&(t.tagName==="TEXTAREA"||t.tagName==="INPUT"||t.tagName==="SELECT"||t.isContentEditable);
-      if(typing||e.ctrlKey||e.metaKey||e.altKey)return;
-      var k=e.key.toLowerCase();
-      if(k==="n"){e.preventDefault();toggleAll();return}
-      if(k==="j"||k==="k"){e.preventDefault();var top=document.getElementById("topbar").getBoundingClientRect().bottom+12;
-        var i=steps.findIndex(function(s){return s.getBoundingClientRect().top>top+4});if(i<0)i=steps.length;
-        var cur=i-1,target=k==="j"?steps[Math.min(i,steps.length-1)]:steps[Math.max(cur-(steps[cur]&&steps[cur].getBoundingClientRect().top>top-8?1:0),0)];
-        if(target)target.scrollIntoView({block:"start"})}
-    });
   })();
 
 

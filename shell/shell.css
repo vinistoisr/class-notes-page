@@ -179,7 +179,7 @@ h1,h2{letter-spacing:.005em}
 /* ---------- Screen-fit layout. Overrides the rules above; keep it last. ----------
    Goal: each step fits one laptop screen. Head + idea span the top; .viz blocks go to the
    left column (colA), everything else (takeaway, cards, readouts, details) to the right (colB).
-   Notes are a fixed 300px column and can all be hidden from the top bar (key N). */
+   Notes are a fixed 300px column and can all be hidden from the top bar. */
 :root{--navh:56px}
 html{scroll-padding-top:calc(var(--navh) + 8px)}
 body{font-size:16px;line-height:1.5}
@@ -192,8 +192,6 @@ h2{font-size:21px}
 .tb-actions{flex:0 0 auto;display:flex;gap:6px;align-items:center}
 #notes-all{font-size:13px;padding:5px 12px;border-radius:999px;white-space:nowrap}
 #notes-all[aria-pressed=true]{background:var(--accent);color:var(--paper)}
-.kbd{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
-@media (max-width:700px){.kbd{display:none}}
 section.topic{scroll-margin-top:calc(var(--navh) + 8px);padding:14px 18px;gap:18px;grid-template-columns:minmax(0,1fr) 300px}
 @media (max-width:1400px){section.topic{grid-template-columns:minmax(0,1fr) 250px}}
 @media (max-width:1100px){section.topic{grid-template-columns:minmax(0,1fr)}}
