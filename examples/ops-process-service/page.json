@@ -1,0 +1,11 @@
+{
+ "title": "Trauma Flow Session Notes",
+ "eyebrow": "Example · Operations management · Managing process and service operations",
+ "h1": "Mapping the patient's path",
+ "lede": "How to draw a service process, measure it, find where people wait and why, and redesign it. Case: Redesigning Trauma Operations at University Hospital. Each step is one picture; tap things to explore. Notes save as you type.",
+ "notes_key": "cnp-example-ops-notes",
+ "notes_doc": "cnpexampleops",
+ "fonts": "https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=IBM+Plex+Mono:wght@400;600&display=swap",
+ "footer": "Sources: Instructor spreadsheets (Waiting Line Single Server, Waiting Line Multiple Servers, Line Balancing). Frei, F.X. (2006), HBR 84(11). Gereffi, G., Humphrey, J. and Sturgeon, T. (2005), Review of International Political Economy 12(1). Ponte, S., Gereffi, G. and Raj-Reichert, G. (2019), Handbook on Global Value Chains. O'Donovan, B. et al. (2005), Design Process Improvement. Class study aid, Oct 17, 2026.",
+ "out": "page.html"
+}

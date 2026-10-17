@@ -1,0 +1,291 @@
+  <!-- 1 -->
+  <section class="topic" id="overview" data-nav="Three zoom levels">
+    <div class="main">
+      <div class="head"><span class="num">1</span><h2>Three zoom levels</h2></div>
+      <p class="idea">Improve a service by looking at it at three levels: <mark>the value chain</mark> (which stages), <mark>the process</mark> (which steps and waits), and <mark>the encounter</mark> (what the patient actually experiences).</p>
+      <div class="viz">
+        <div class="chips" id="z-chips" role="group" aria-label="Zoom level"></div>
+        <div class="chart"><svg id="z-chart" viewBox="0 0 680 250" role="img" aria-label="The selected zoom level of a hospital trauma service."></svg></div>
+        <p class="cap">Generic hospital trauma pathway for illustration, not taken from the case.</p>
+      </div>
+      <div class="card" id="z-card" aria-live="polite"></div>
+      <div class="take">Most of a patient's time is spent between steps, not in them. You find that time only at the process level, and you judge whether it matters at the encounter level.</div>
+    </div>
+    <div class="notes">
+      <label for="n-overview">Notes <em data-for="overview"></em></label>
+      <textarea id="n-overview" data-topic="overview" placeholder="How the prof frames the session..."></textarea>
+    </div>
+  </section>
+
+  <div class="group-label">Mapping</div>
+
+  <!-- 2 -->
+  <section class="topic" id="map" data-nav="Process map">
+    <div class="main">
+      <div class="head"><span class="num">2</span><h2>Reading a process map</h2></div>
+      <p class="idea">A swimlane map puts each role in its own row. Every arrow that crosses a lane is a <mark>handoff</mark>; every triangle is a <mark>wait</mark>. Both are where time and errors pile up.</p>
+      <div class="viz">
+        <div class="chips" role="group" aria-label="Map options">
+          <button type="button" id="m-waits" aria-pressed="true">Show waits</button>
+          <button type="button" id="m-va" aria-pressed="false">Colour by value added</button>
+        </div>
+        <div class="chart"><svg id="map-chart" viewBox="0 0 680 330" role="img" aria-label="Swimlane process map of a trauma patient's path across four lanes: paramedics, trauma team, imaging, and surgery. Tap a step for detail."></svg></div>
+        <div class="legend" id="map-legend"></div>
+        <p class="cap">Illustrative map, not the case's. Tap any shape. Replace it with the case's own steps in class.</p>
+      </div>
+      <div class="readout" id="map-sum"></div>
+      <div class="card" id="map-card" aria-live="polite"></div>
+      <details><summary>The symbols and the three kinds of time</summary><div class="more">
+        <p><b>Rectangle:</b> activity. <b>Diamond:</b> decision. <b>Triangle:</b> wait or inventory (patients in a queue are inventory). <b>Arrow:</b> flow of the patient, material or information. <b>Lanes:</b> who does it.</p>
+        <p><b>Value added:</b> the patient would pay for it and it changes their condition (resuscitation, scan, operation). <b>Necessary, not value added:</b> required by safety or rules (handover, documentation). <b>Waste:</b> waiting, rework, searching, repeated questions.</p>
+        <p><b>Service blueprint:</b> a map with a <b>line of visibility</b>. Above it is what the patient sees (front stage); below it is the support work they never see (back stage).</p>
+      </div></details>
+      <div class="take">Hide the waits and the map looks efficient. Show them and you see where the redesign has to happen: between lanes, at the scanner and the operating room.</div>
+    </div>
+    <div class="notes">
+      <label for="n-map">Notes <em data-for="map"></em></label>
+      <textarea id="n-map" data-topic="map" placeholder="Steps, handoffs and waits in the case..."></textarea>
+    </div>
+  </section>
+
+  <div class="group-label">Measuring</div>
+
+  <!-- 3 -->
+  <section class="topic" id="bottleneck" data-nav="Bottleneck">
+    <div class="main">
+      <div class="head"><span class="num">3</span><h2>Find the bottleneck</h2></div>
+      <p class="idea">Each step can serve so many patients an hour. The step with the lowest capacity is the <mark>bottleneck</mark>, and it sets the capacity of the whole process.</p>
+      <div class="viz">
+        <div class="steps"><table>
+          <thead><tr><th>Step</th><th>Minutes per patient</th><th>Parallel resources</th><th>Capacity / hr</th><th>Utilization</th><th></th></tr></thead>
+          <tbody id="bn-body"></tbody>
+        </table></div>
+        <div class="wsbar">
+          <button type="button" id="bn-add">Add a step</button>
+          <button type="button" id="bn-reset">Reset to example</button>
+          <span class="cap">Example numbers. Type in the case's own figures.</span>
+        </div>
+        <div class="controls">
+          <div class="ctl"><label for="bn-lam">Patients arriving per hour <output id="bn-lam-out"></output></label><input type="range" id="bn-lam" min="0.5" max="10" step="0.5" value="2.5"></div>
+          <div class="ctl"><label for="bn-w">Average hours in the department <output id="bn-w-out"></output></label><input type="range" id="bn-w" min="0.5" max="12" step="0.5" value="4"></div>
+        </div>
+      </div>
+      <div class="viz side"><div class="chart"><svg id="bn-chart" viewBox="0 0 680 240" role="img" aria-label="Bars show each step's capacity per hour. A vertical line shows the arrival rate. The shortest bar is the bottleneck."></svg></div></div>
+      <div class="readout" id="bn-sum"></div>
+      <details><summary>The formulas</summary><div class="more">
+        <p><b>Capacity per hour</b> = 60 ÷ minutes per patient × number of parallel resources.</p>
+        <p><b>Utilization</b> = arrival rate ÷ capacity. Above 100%, the queue in front of that step grows without limit.</p>
+        <p><b>Little's Law:</b> patients in the system (L) = arrival rate (λ) × average time in the system (W). It holds for any stable process. Cut W and you free beds without adding any.</p>
+        <p><b>Process efficiency</b> = value-added time ÷ total time in the system.</p>
+      </div></details>
+      <div class="take">Adding capacity anywhere except the bottleneck changes nothing. Once you fix it, the bottleneck moves to the next-lowest step.</div>
+    </div>
+    <div class="notes">
+      <label for="n-bottleneck">Notes <em data-for="bottleneck"></em></label>
+      <textarea id="n-bottleneck" data-topic="bottleneck" placeholder="The case's bottleneck, and what moves it..."></textarea>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="topic" id="queue" data-nav="Waiting lines">
+    <div class="main">
+      <div class="head"><span class="num">4</span><h2>Why waits explode near 100%</h2></div>
+      <p class="idea">With random arrivals, waiting time does not rise in a straight line. It <mark>shoots up as utilization nears 100%</mark>. A second server, or one shared line, cuts it sharply.</p>
+      <div class="viz">
+        <div class="controls">
+          <div class="ctl"><label for="q-lam">Arrival rate λ (per hour) <output id="q-lam-out"></output></label><input type="range" id="q-lam" min="0.5" max="20" step="0.5" value="3"></div>
+          <div class="ctl"><label for="q-mu">Service rate μ per server (per hour) <output id="q-mu-out"></output></label><input type="range" id="q-mu" min="1" max="20" step="0.5" value="4"></div>
+          <div class="ctl"><label for="q-s">Servers s <output id="q-s-out"></output></label><input type="range" id="q-s" min="1" max="6" step="1" value="1"></div>
+        </div>
+        <div class="chart"><svg id="q-chart" viewBox="0 0 680 270" role="img" aria-label="Average wait in the queue, in minutes, against utilization, for one, two and three servers. A dot marks the current settings."></svg></div>
+        <p class="cap">Same model as the instructor's "Waiting Line Single Server" and "Multiple Servers" spreadsheets (M/M/1 and M/M/s). The defaults (λ = 3, μ = 4, s = 1) match the spreadsheets.</p>
+      </div>
+      <div class="card" id="q-pool" aria-live="polite"></div>
+      <div class="readout" id="q-sum"></div>
+      <details><summary>The formulas (M/M/s)</summary><div class="more">
+        <p>a = λ/μ, utilization ρ = λ/(sμ). P0 = 1 ÷ [Σ<sub>n=0..s-1</sub> aⁿ/n! + aˢ/(s!(1-ρ))].</p>
+        <p>Lq = P0 · aˢ · ρ ÷ (s!(1-ρ)²). L = Lq + a. Wq = Lq/λ. W = Wq + 1/μ. For one server: Lq = λ²/(μ(μ-λ)), W = 1/(μ-λ).</p>
+        <p>Assumes random (Poisson) arrivals, exponential service times, first come first served, and no limit on the line. Real trauma arrivals come in bursts, which makes waits worse than the model.</p>
+      </div></details>
+      <div class="take">Running a trauma bay or CT scanner near 100% busy guarantees long waits. Keeping spare capacity is a deliberate choice, not waste, when waiting costs lives.</div>
+    </div>
+    <div class="notes">
+      <label for="n-queue">Notes <em data-for="queue"></em></label>
+      <textarea id="n-queue" data-topic="queue" placeholder="Arrival and service rates in the case..."></textarea>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="topic" id="balance" data-nav="Line balancing">
+    <div class="main">
+      <div class="head"><span class="num">5</span><h2>Line balancing</h2></div>
+      <p class="idea">Split the tasks among stations so that <mark>no station takes longer than the cycle time</mark> and as little time as possible sits idle. The same logic applies to splitting work among a trauma team.</p>
+      <div class="viz side"><div class="chart"><svg id="pg-chart" viewBox="0 0 680 210" role="img" aria-label="Precedence diagram of tasks A to I with their times."></svg></div></div>
+      <div class="viz">
+        <div class="chips" id="lb-rules" role="group" aria-label="Priority rule"></div>
+        <div class="controls">
+          <div class="ctl"><label for="lb-c">Cycle time <output id="lb-c-out"></output></label><input type="range" id="lb-c" min="12" max="40" step="1" value="12"></div>
+        </div>
+        <div class="chart"><svg id="lb-chart" viewBox="0 0 680 260" role="img" aria-label="Stations as bars, each split into its tasks, against the cycle time line."></svg></div>
+        <p class="cap">Tasks, times and the cycle time of 12 are from the instructor's "Line Balancing" spreadsheet. Same four priority rules.</p>
+      </div>
+      <div class="readout" id="lb-sum"></div>
+      <details><summary>How the heuristic works</summary><div class="more">
+        <p>Open station 1. List the tasks whose predecessors are done and that fit in the time left. Pick one by the priority rule. Repeat until nothing fits, then open the next station.</p>
+        <p><b>Minimum stations</b> = total task time ÷ cycle time, rounded up. <b>Efficiency</b> = total task time ÷ (stations × cycle time). <b>Balance delay</b> = 1 − efficiency.</p>
+        <p><b>Cycle time</b> (or takt time) = available time ÷ required output. A shorter cycle means more output and more stations.</p>
+      </div></details>
+      <div class="take">The rule matters less than the cycle time. The longest single task sets the shortest possible cycle, so splitting that task is often the real fix.</div>
+    </div>
+    <div class="notes">
+      <label for="n-balance">Notes <em data-for="balance"></em></label>
+      <textarea id="n-balance" data-topic="balance" placeholder="Which rule did best at which cycle time..."></textarea>
+    </div>
+  </section>
+
+  <div class="group-label">Improving</div>
+
+  <!-- 6 -->
+  <section class="topic" id="service" data-nav="Service variability">
+    <div class="main nosplit">
+      <div class="head"><span class="num">6</span><h2>Service is different: the customer is in the process</h2></div>
+      <p class="idea">In a factory you can buffer with inventory. In a service the customer <mark>brings variability into the process</mark>, and you either <mark>accommodate</mark> it or <mark>reduce</mark> it.</p>
+      <div class="viz">
+        <div class="chips" id="sv-mode" role="group" aria-label="Strategy"></div>
+        <div class="vgrid" id="sv-grid"></div>
+        <p class="cap">Five types of customer-introduced variability: Frei, F.X. (2006), "Breaking the Trade-Off Between Efficiency and Service", HBR. Trauma examples are mine.</p>
+      </div>
+      <details><summary>Four ways services differ from manufacturing</summary><div class="more"><ul>
+        <li><b>Simultaneous:</b> produced and consumed at once, so no finished-goods buffer.</li>
+        <li><b>Perishable capacity:</b> an empty trauma bay at 3 AM can't be stored for 6 PM.</li>
+        <li><b>Customer participation:</b> the patient's condition and history are inputs.</li>
+        <li><b>Intangible:</b> quality is partly the experience (being told what is happening), not only the outcome.</li>
+      </ul></div></details>
+      <div class="take">Trauma care mostly has to accommodate (you can't refuse a patient), so the levers are on the hospital's side: spare capacity, flexible staff, and standard protocols.</div>
+    </div>
+    <div class="notes">
+      <label for="n-service">Notes <em data-for="service"></em></label>
+      <textarea id="n-service" data-topic="service" placeholder="Variability in the case, and how it is handled..."></textarea>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="topic" id="levers" data-nav="Redesign levers">
+    <div class="main" data-cols="wideA">
+      <div class="head"><span class="num">7</span><h2>From map to redesign</h2></div>
+      <p class="idea">Once the map shows the waits and the bottleneck, a small set of levers covers most redesigns. Tap a lever to see <mark>what it changes</mark> and a trauma example.</p>
+      <div class="viz">
+        <div class="lever" id="lv-table"></div>
+      </div>
+      <div class="card" id="lv-card" aria-live="polite"></div>
+      <div class="take">Good redesigns combine levers: segment the flow, run steps in parallel, and protect the bottleneck. Then check the result with Little's Law: shorter time in the system means fewer patients waiting, with the same beds.</div>
+    </div>
+    <div class="notes">
+      <label for="n-levers">Notes <em data-for="levers"></em></label>
+      <textarea id="n-levers" data-topic="levers" placeholder="Which levers the case uses..."></textarea>
+    </div>
+  </section>
+
+  <div class="group-label">Readings and case</div>
+
+  <!-- 8 -->
+  <section class="topic" id="value" data-nav="Value chains">
+    <div class="main">
+      <div class="head"><span class="num">8</span><h2>Value chains and who controls them</h2></div>
+      <p class="idea">Ponte, Gereffi and Raj-Reichert (2019) ask two questions about any value chain: <mark>who coordinates it</mark> (governance) and <mark>how a participant moves up</mark> (upgrading).</p>
+      <div class="viz">
+        <div class="chart"><svg id="gv-chart" viewBox="0 0 680 230" role="img" aria-label="Five governance types from market to hierarchy, with explicit coordination and power asymmetry rising from left to right. Tap a type."></svg></div>
+      </div>
+      <div class="card" id="gv-card" aria-live="polite"></div>
+      <details><summary>Four kinds of upgrading</summary><div class="more"><ul>
+        <li><b>Process:</b> do the same thing more efficiently (a faster trauma pathway).</li>
+        <li><b>Product:</b> offer a better or higher-value service (a Level I trauma centre).</li>
+        <li><b>Functional:</b> take on higher-value functions (research, training other hospitals).</li>
+        <li><b>Chain:</b> use the capability in a new chain (the trauma system design sold as a model).</li>
+      </ul></div></details>
+      <p class="cap">Governance types from Gereffi, Humphrey and Sturgeon (2005), the framework the handbook's introduction builds on. Summary from the published literature; check against the reading.</p>
+      <div class="take">For a hospital, the trauma "chain" runs from paramedics to rehab across separate organizations. Redesigning one link without the handoffs on either side moves the wait somewhere else.</div>
+    </div>
+    <div class="notes">
+      <label for="n-value">Notes <em data-for="value"></em></label>
+      <textarea id="n-value" data-topic="value" placeholder="Who coordinates the trauma chain in the case..."></textarea>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="topic" id="models" data-nav="Process models">
+    <div class="main">
+      <div class="head"><span class="num">9</span><h2>Which process model for which question</h2></div>
+      <p class="idea">O'Donovan, Eckert, Clarkson and Browning (2005) review process models. Each answers a different question, so <mark>pick the model from the question</mark>.</p>
+      <div class="viz">
+        <div class="chips" id="md-chips" role="group" aria-label="Question"></div>
+        <div class="mgrid" id="md-grid"></div>
+      </div>
+      <p class="cap">My summary of the model families covered in this literature, not a page-by-page summary of pp. 60-87. Check the chapter before quoting.</p>
+      <div class="take">A flowchart is enough to find waits. If the problem is rework loops between teams, a dependency matrix shows it better; if it is variable demand, you need a simulation or queueing model.</div>
+    </div>
+    <div class="notes">
+      <label for="n-models">Notes <em data-for="models"></em></label>
+      <textarea id="n-models" data-topic="models" placeholder="Points from the reading..."></textarea>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="topic" id="trauma" data-nav="Trauma case">
+    <div class="main">
+      <div class="head"><span class="num">10</span><h2>Working the trauma case</h2></div>
+      <p class="idea">The same five moves work for any service redesign. Use them as the <mark>order of attack</mark> in class.</p>
+      <div class="viz">
+        <div class="flow5" id="t5"></div>
+        <div class="card" id="t5-card" aria-live="polite"></div>
+      </div>
+      <details open data-col="a"><summary>Questions to have answers for</summary><div class="more"><ol>
+        <li>Draw the current trauma process as a swimlane map. Where are the handoffs and waits?</li>
+        <li>Which step is the bottleneck, and what is its utilization?</li>
+        <li>What share of a patient's time adds value?</li>
+        <li>Which sources of variability matter most, and should the hospital accommodate or reduce each one?</li>
+        <li>What is your redesign? Which levers does it use, and where does the bottleneck move next?</li>
+        <li>How does the redesign change the patient's experience, not only the throughput?</li>
+      </ol></div></details>
+      <div class="frame"><div class="fh"><b>Answer frame</b><button type="button" class="addframe" data-target="n-trauma">Add to my notes</button></div><pre>Current bottleneck (and utilization):
+Biggest wait, and its cause:
+Redesign (levers used):
+Expected effect (Little's Law: L = λW):
+Where the bottleneck moves next:
+Effect on the patient's experience:</pre></div>
+      <p class="cap">The case text was not available when this page was built, so the example numbers are generic. Put the case's figures into steps 3 and 4.</p>
+      <div class="take">Map, measure, diagnose, redesign, judge: in that order, and check every redesign with the same tools you used to diagnose.</div>
+    </div>
+    <div class="notes">
+      <label for="n-trauma">Notes <em data-for="trauma"></em></label>
+      <textarea id="n-trauma" data-topic="trauma" placeholder="Case facts and the class's redesign..."></textarea>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="topic" id="glossary" data-nav="Glossary">
+    <div class="main">
+      <div class="head"><span class="num">11</span><h2>Glossary</h2></div>
+      <dl class="gloss">
+        <dt>Bottleneck</dt><dd>The step with the lowest capacity. It sets the output of the whole process.</dd>
+        <dt>Capacity</dt><dd>The most a step can process per unit of time: resources × 60 ÷ minutes per unit.</dd>
+        <dt>Utilization (ρ)</dt><dd>Demand ÷ capacity. Waits grow sharply as it nears 100%.</dd>
+        <dt>Flow time</dt><dd>Total time a unit spends in the process, including waits.</dd>
+        <dt>Little's Law</dt><dd>L = λW. Units in the system = arrival rate × time in the system.</dd>
+        <dt>Cycle time</dt><dd>Time between finished units leaving a line; the longest station time.</dd>
+        <dt>Takt time</dt><dd>Available time ÷ customer demand: the pace the process must match.</dd>
+        <dt>Balance delay</dt><dd>Share of station time left idle: 1 − efficiency.</dd>
+        <dt>Swimlane</dt><dd>A row of a process map showing one role's work.</dd>
+        <dt>Line of visibility</dt><dd>The line in a service blueprint between what the customer sees and the back stage.</dd>
+        <dt>Value added</dt><dd>Work that changes the product or the customer's condition in a way they would pay for.</dd>
+        <dt>M/M/s</dt><dd>Queue with random arrivals, random service times and s servers.</dd>
+        <dt>Pooling</dt><dd>Serving several streams from one shared queue and set of servers; cuts waits at the same utilization.</dd>
+        <dt>GVC governance</dt><dd>How a global value chain is coordinated: market, modular, relational, captive, or hierarchy.</dd>
+      </dl>
+    </div>
+    <div class="notes">
+      <label for="n-takeaways">Takeaways <em data-for="takeaways"></em></label>
+      <textarea id="n-takeaways" data-topic="takeaways" placeholder="The three things to remember for the Nov 10 assignment..."></textarea>
+    </div>
+  </section>
+

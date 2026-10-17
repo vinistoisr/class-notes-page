@@ -1,0 +1,975 @@
+<title>Trauma Flow Session Notes</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@600;700&amp;family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&amp;family=IBM+Plex+Mono:wght@400;600&amp;display=swap">
+<style>
+:root{
+  --bg:#eef3f3; --paper:#ffffff; --ink:#132326; --muted:#53686c; --line:#d2dfe0;
+  --accent:#0d6466; --accent-soft:#dcefee; --signal:#a8600c; --signal-soft:#fbeedb;
+  --good:#2b7a4b; --good-soft:#e0f1e6; --bad:#c0392b; --bad-soft:#fae3df; --pad:#fafcfb; --padline:#e2ebea;
+  --c3:#7a4f9e; --l1:#3a5a9b;
+  --display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif; --body:"Atkinson Hyperlegible",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1718; --paper:#162123; --ink:#e2eced; --muted:#93a8ab; --line:#28393b;
+  --accent:#5cc2c0; --accent-soft:#183334; --signal:#eaa24c; --signal-soft:#3a2b16;
+  --good:#6cc790; --good-soft:#1a3324; --bad:#f08b7e; --bad-soft:#3c211e; --pad:#182426; --padline:#233335;
+  --c3:#c3a0e6; --l1:#8fa9e6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1718; --paper:#162123; --ink:#e2eced; --muted:#93a8ab; --line:#28393b;
+  --accent:#5cc2c0; --accent-soft:#183334; --signal:#eaa24c; --signal-soft:#3a2b16;
+  --good:#6cc790; --good-soft:#1a3324; --bad:#f08b7e; --bad-soft:#3c211e; --pad:#182426; --padline:#233335;
+  --c3:#c3a0e6; --l1:#8fa9e6; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:17px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1200px;margin:0 auto;padding-block:24px 64px;display:flex;flex-direction:column;gap:24px}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+h1{font-family:var(--display);font-weight:900;font-size:clamp(28px,4.5vw,42px);line-height:1.1;margin:6px 0 8px;text-wrap:balance}
+h2{font-family:var(--display);font-weight:700;font-size:23px;line-height:1.25;margin:0;text-wrap:balance}
+p{margin:0}
+.lede{color:var(--muted);max-width:72ch}
+nav.toc{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);padding-block:10px;border-bottom:1px solid var(--line);display:flex;gap:6px;overflow-x:auto;scrollbar-width:thin}
+nav.toc a{flex:0 0 auto;font-size:14px;font-weight:600;text-decoration:none;color:var(--ink);padding:5px 11px;border:1px solid var(--line);border-radius:999px;background:var(--paper);display:flex;gap:6px;align-items:center}
+nav.toc a i{font-style:normal;font-family:var(--mono);font-size:11px;color:var(--muted)}
+nav.toc a:hover,nav.toc a:focus-visible,nav.toc a.on{border-color:var(--accent);color:var(--accent);outline:none}
+.statusbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center;font-size:14px;color:var(--muted)}
+.pill{font-family:var(--mono);font-size:12px;padding:3px 10px;border-radius:999px;background:var(--accent-soft);color:var(--accent)}
+.pill.warn{background:transparent;border:1px solid var(--signal);color:var(--signal)}
+button{font:600 14px var(--body);color:var(--accent);background:var(--paper);border:1px solid var(--accent);border-radius:8px;padding:6px 12px;cursor:pointer}
+button:hover{background:var(--accent-soft)}
+button:focus-visible,textarea:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.group-label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--signal);margin-top:10px}
+section.topic{scroll-margin-top:64px;background:var(--paper);border:1px solid var(--line);border-radius:12px;padding:22px;display:grid;grid-template-columns:minmax(0,2fr) minmax(0,1fr);gap:24px}
+@media (max-width:960px){section.topic{grid-template-columns:minmax(0,1fr);padding:18px}}
+.main{display:flex;flex-direction:column;gap:14px;min-width:0}
+.head{display:flex;gap:12px;align-items:baseline}
+.nt{margin-left:auto;flex:0 0 auto;font-size:12.5px;padding:3px 10px;border-color:var(--line);color:var(--muted)}
+.nt:hover{color:var(--accent);border-color:var(--accent)}
+section.topic.nc{grid-template-columns:minmax(0,1fr)}
+section.topic.nc>.notes{display:none}
+.num{font-family:var(--mono);font-weight:600;font-size:14px;color:var(--paper);background:var(--accent);border-radius:6px;padding:2px 8px;flex:0 0 auto}
+.idea{font-size:19px;line-height:1.4;font-weight:600;max-width:64ch}
+.idea mark{background:var(--signal-soft);color:inherit;padding:0 3px;border-radius:3px}
+.cap{font-size:13.5px;color:var(--muted)}
+.take{display:flex;gap:10px;align-items:flex-start;background:var(--accent-soft);border-radius:10px;padding:10px 14px;font-size:16px;font-weight:600}
+.take::before{content:"Takeaway";flex:0 0 auto;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding-top:3px}
+.viz{border:1px solid var(--line);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.chart{overflow-x:auto}
+.chart svg{width:100%;min-width:520px;height:auto;display:block}
+.chart.sm svg{min-width:300px}
+svg .hit{cursor:pointer}
+svg .hit:focus-visible{outline:none}
+svg .hit:focus-visible circle,svg .hit:focus-visible rect{stroke:var(--ink);stroke-width:2.5}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{font-size:13px;padding:4px 10px;border-radius:999px}
+.chips button.on{background:var(--accent);color:var(--paper)}
+.card{background:var(--bg);border-radius:10px;padding:12px 14px;display:flex;flex-direction:column;gap:4px;font-size:15.5px;min-height:92px}
+.card b{font-family:var(--display);font-size:17px}
+.card .who{font-family:var(--mono);font-size:12.5px;color:var(--signal)}
+.split{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:760px){.split{grid-template-columns:minmax(0,1fr)}}
+.controls{display:flex;flex-wrap:wrap;gap:12px 20px;align-items:flex-end}
+.ctl{display:flex;flex-direction:column;gap:4px;min-width:160px;flex:1 1 160px}
+.ctl label{font-size:13px;font-weight:600;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.ctl output{font-family:var(--mono);color:var(--ink);font-weight:600;white-space:nowrap}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.readout{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
+.readout div{background:var(--bg);border-radius:8px;padding:8px 10px}
+.readout b{display:block;font-family:var(--mono);font-size:18px;font-variant-numeric:tabular-nums}
+.readout span{font-size:12.5px;color:var(--muted);line-height:1.3;display:block}
+/* scorecard */
+.score{overflow-x:auto}
+.score table{border-collapse:collapse;width:100%;min-width:480px;font-size:14.5px}
+.score th,.score td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
+.score th{font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:600}
+.score td small{display:block;font-size:12.5px;color:var(--muted)}
+.score tfoot td{font-weight:700;border-bottom:0}
+.tot{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:14px}
+.tot i{display:block;height:10px;border-radius:5px}
+/* vrio toggles */
+details{border:1px solid var(--line);border-radius:8px;padding:8px 12px}
+details+details{margin-top:8px}
+summary{cursor:pointer;font-weight:600}
+details .more{margin-top:8px;font-size:15px;display:flex;flex-direction:column;gap:6px}
+details .more ul{margin:0;padding-left:20px}
+details .two{margin-top:8px;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;font-size:15px}
+@media (max-width:640px){details .two{grid-template-columns:minmax(0,1fr)}}
+details .two b{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:2px}
+details .for b{color:var(--good)} details .against b{color:var(--bad)}
+details .two ul{padding-left:18px;margin:0}
+dl.gloss{margin:0;display:grid;grid-template-columns:minmax(120px,max-content) minmax(0,1fr);gap:8px 16px}
+dl.gloss dt{font-weight:700}
+dl.gloss dd{margin:0}
+@media (max-width:560px){dl.gloss{grid-template-columns:minmax(0,1fr)}dl.gloss dd{margin-bottom:8px}}
+.notes{display:flex;flex-direction:column;gap:8px;min-width:0}
+.notes label{font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);display:flex;justify-content:space-between;gap:8px}
+.notes label em{font-style:normal;color:var(--accent);text-transform:none;letter-spacing:0}
+textarea{width:100%;min-height:200px;flex:1;resize:vertical;font:16px/28px var(--body);color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:6px 12px;
+  background-color:var(--pad);background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,var(--padline) 27px,var(--padline) 28px);background-attachment:local;background-position:0 6px}
+/* PDEC worksheet */
+.qgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:760px){.qgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.q{background:var(--bg);border-radius:8px;padding:8px 10px;font-size:13.5px;line-height:1.35}
+.q b{display:block;font-family:var(--mono);font-size:13px;color:var(--accent);margin-bottom:2px}
+.res{font-size:12.5px;font-weight:700;white-space:nowrap;padding:3px 8px;border-radius:999px;display:inline-block;margin-top:6px}
+.res.sus{background:var(--good);color:var(--paper)} .res.tmp{background:var(--good-soft);color:var(--good)} .res.unu{background:var(--signal-soft);color:var(--signal)}
+.res.par{background:var(--bg);color:var(--muted);border:1px solid var(--line)} .res.dis{background:var(--bad-soft);color:var(--bad)} .res.none{color:var(--muted);border:1px dashed var(--line)}
+.rm{border-color:var(--line);color:var(--muted);font-size:12px;padding:5px 8px;margin-top:4px}
+a{color:var(--accent)}
+footer{font-size:13px;color:var(--muted)}
+/* prof's questions */
+.args{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px}
+@media (max-width:640px){.args{grid-template-columns:minmax(0,1fr)}}
+.argcol>b{display:block;font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;margin-bottom:6px}
+.argcol.yes>b{color:var(--good)} .argcol.no>b{color:var(--bad)}
+.arg{display:flex;gap:8px;align-items:flex-start;justify-content:space-between;border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:14px;line-height:1.35}
+.arg+.arg{margin-top:6px}
+.arg.off{opacity:.5}
+.arg small{display:block;color:var(--muted);font-size:12.5px}
+.wt{display:inline-flex;gap:3px;flex:0 0 auto;padding-top:2px}
+.wt button{width:24px;height:24px;padding:0;border-radius:6px;border:1px solid var(--line);color:var(--muted);font:600 11.5px var(--mono);background:var(--paper)}
+.yes .wt button.f{background:var(--good);border-color:var(--good);color:var(--paper)}
+.no .wt button.f{background:var(--bad);border-color:var(--bad);color:var(--paper)}
+.frame{background:var(--bg);border-radius:10px;padding:10px 14px;display:flex;flex-direction:column;gap:6px}
+.frame .fh{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.frame .fh b{font-family:var(--mono);font-size:11.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--accent)}
+.frame pre{margin:0;white-space:pre-wrap;font:14px/1.6 var(--mono);color:var(--ink)}
+.vh{font-family:var(--display);font-size:16px;font-weight:700}
+.fit{overflow-x:auto}
+.fit table{border-collapse:collapse;width:100%;min-width:460px;font-size:14.5px}
+.fit td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.fit td small{display:block;font-size:12.5px;color:var(--muted)}
+.tri{display:inline-flex;border:1px solid var(--line);border-radius:7px;overflow:hidden;white-space:nowrap}
+.tri button{border:0;border-radius:0;padding:4px 8px;font-size:12.5px;color:var(--muted);background:var(--paper)}
+.tri button+button{border-left:1px solid var(--line)}
+.tri button.on.k0{background:var(--good);color:var(--paper)} .tri button.on.k1{background:var(--signal);color:var(--paper)} .tri button.on.k2{background:var(--bad);color:var(--paper)}
+.fitbar{display:flex;height:26px;border-radius:7px;overflow:hidden;font:600 12.5px var(--mono);color:var(--paper)}
+.fitbar span{display:flex;align-items:center;justify-content:center;white-space:nowrap;overflow:hidden}
+.needs{display:flex;flex-direction:column}
+.need{display:grid;grid-template-columns:minmax(150px,1fr) minmax(0,1.6fr);gap:4px 12px;padding:6px 0;border-bottom:1px solid var(--line);font-size:14.5px;align-items:center}
+.need:last-child{border-bottom:0}
+.need .pills{display:flex;flex-wrap:wrap;gap:4px 6px}
+.need .res{margin-top:0}
+@media (max-width:560px){.need{grid-template-columns:minmax(0,1fr)}}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
+
+h1,h2{letter-spacing:.005em}
+.legend{display:flex;flex-wrap:wrap;gap:6px 16px;font-size:13px;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:6px}
+.legend i{display:inline-block;width:16px;height:12px;border-radius:3px;border:1.5px solid var(--line)}
+.steps{overflow-x:auto}
+.steps table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px}
+.steps th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;text-align:left;padding:6px 4px;border-bottom:2px solid var(--line)}
+.steps td{padding:5px 4px;border-bottom:1px solid var(--line)}
+.steps input{width:100%;font:15px var(--body);color:var(--ink);background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:6px 7px}
+.steps input[type=number]{max-width:92px;font-family:var(--mono);font-size:14px}
+.steps td.numc{font-family:var(--mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.vgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+@media (max-width:1100px){.vgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:620px){.vgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.vc{background:var(--bg);border-radius:10px;padding:10px 12px;display:flex;flex-direction:column;gap:5px;font-size:14px;line-height:1.4}
+.vc b{font-family:var(--display);font-size:17px}
+.vc small{color:var(--muted);font-size:12.5px}
+.vc p{margin:0}
+.strat{border-top:1px solid var(--line);padding-top:6px;font-weight:700}
+.strat.ac{color:var(--accent)} .strat.rd{color:var(--signal)}
+.lever{overflow-x:auto}
+.lever table{border-collapse:collapse;width:100%;min-width:480px;font-size:14.5px}
+.lever th{font-size:11.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);font-weight:700;text-align:left;padding:6px;border-bottom:2px solid var(--line)}
+.lever th.c,.lever td.c{text-align:center}
+.lever td{padding:7px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.lever td small{display:block;font-size:12.5px;color:var(--muted)}
+.lever tr[role=button]{cursor:pointer}
+.lever tr[role=button]:hover td,.lever tr.on td{background:var(--accent-soft)}
+.lever tr[role=button]:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.eff{display:inline-block;width:14px;height:14px;border-radius:50%;border:2px solid var(--accent);vertical-align:middle}
+.eff.e2{background:var(--accent)} .eff.e1{background:linear-gradient(90deg,var(--accent) 50%,transparent 50%)} .eff.e0{display:none}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:8px}
+.mc{border:1px solid var(--line);border-radius:10px;padding:9px 12px;display:flex;flex-direction:column;gap:3px;font-size:14px;opacity:.55;transition:opacity .2s}
+.mc b{font-family:var(--display);font-size:16px}
+.mc small{color:var(--muted);font-size:13px;line-height:1.35}
+.mc.on{opacity:1;border-color:var(--accent);background:var(--accent-soft)}
+.flow5{display:flex;flex-wrap:wrap;gap:6px}
+.flow5 button{display:flex;align-items:center;gap:8px;font-size:15px;padding:8px 14px;border-radius:999px}
+.flow5 button i{font-style:normal;font-family:var(--mono);font-size:12px;width:20px;height:20px;border-radius:50%;background:var(--accent-soft);display:inline-flex;align-items:center;justify-content:center}
+.flow5 button.on{background:var(--accent);color:var(--paper)}
+.flow5 button.on i{background:var(--paper);color:var(--accent)}
+.chips button[aria-pressed=true]{background:var(--accent);color:var(--paper)}
+
+/* ---------- Screen-fit layout. Overrides the rules above; keep it last. ----------
+   Goal: each step fits one laptop screen. Head + idea span the top; .viz blocks go to the
+   left column (colA), everything else (takeaway, cards, readouts, details) to the right (colB).
+   Notes are a fixed 300px column and can all be hidden from the top bar (key N). */
+:root{--navh:56px}
+html{scroll-snap-type:y proximity;scroll-padding-top:calc(var(--navh) + 8px)}
+body{font-size:16px;line-height:1.5}
+.wrap{gap:16px;padding-block:18px 48px;max-width:1360px}
+h1{font-size:clamp(26px,3.6vw,36px)}
+h2{font-size:21px}
+.lede{font-size:15.5px}
+.topbar{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;gap:8px;align-items:center;padding-block:8px}
+.topbar nav.toc{position:static;border:0;padding:0;flex:1 1 auto;min-width:0}
+.tb-actions{flex:0 0 auto;display:flex;gap:6px;align-items:center}
+#notes-all{font-size:13px;padding:5px 12px;border-radius:999px;white-space:nowrap}
+#notes-all[aria-pressed=true]{background:var(--accent);color:var(--paper)}
+.kbd{font-family:var(--mono);font-size:11px;color:var(--muted);white-space:nowrap}
+@media (max-width:700px){.kbd{display:none}}
+section.topic{scroll-snap-align:start;scroll-margin-top:calc(var(--navh) + 8px);padding:14px 18px;gap:18px;grid-template-columns:minmax(0,1fr) 300px}
+@media (max-width:1400px){section.topic{grid-template-columns:minmax(0,1fr) 250px}}
+@media (max-width:1100px){section.topic{grid-template-columns:minmax(0,1fr)}}
+section.topic.nc{grid-template-columns:minmax(0,1fr)}
+.main{gap:10px;container-type:inline-size}
+.idea{font-size:17px;max-width:none}
+.take{font-size:15px;padding:8px 12px}
+.viz{padding:10px 12px;gap:8px}
+.card{min-height:0;padding:10px 12px;font-size:15px}
+details{padding:6px 10px}
+details .more{font-size:14.5px}
+textarea{min-height:140px}
+.cols,.colA,.colB{display:flex;flex-direction:column;gap:10px;min-width:0}
+@container (min-width:820px){
+  .cols{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:14px;align-items:start}
+  .cols.wideA{grid-template-columns:minmax(0,2.2fr) minmax(0,1fr)}
+  .cols.even{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  .cols.solo{grid-template-columns:minmax(0,1fr)}
+}
+.chart svg{max-height:max(180px,calc(100vh - var(--navh) - 290px))}
+.colB .chart svg{min-width:0}
+.readout{grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:6px}
+.readout div{padding:6px 9px}
+.readout b{font-size:16px}
+.readout span{font-size:12px;line-height:1.25}
+.take{font-size:14.5px}
+@media (max-width:960px){html{scroll-snap-type:none}}
+
+.steps td{padding:3px 4px}
+.steps input{padding:4px 7px}
+.lever td{padding:5px 6px}
+
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Example · Operations management · Managing process and service operations</div>
+    <h1>Mapping the patient's path</h1>
+    <p class="lede">How to draw a service process, measure it, find where people wait and why, and redesign it. Case: Redesigning Trauma Operations at University Hospital. Each step is one picture; tap things to explore. Notes save as you type.</p>
+  </header>
+
+  <div class="statusbar">
+    <span id="save-status" class="pill">Notes: saving on this device</span>
+    <button type="button" id="copy-all">Copy all notes</button>
+    <span id="copy-msg" aria-live="polite"></span>
+  </div>
+
+  <div class="topbar" id="topbar">
+    <nav class="toc" aria-label="Steps">
+    <a href="#overview"><i>1</i>Three zoom levels</a>
+    <a href="#map"><i>2</i>Process map</a>
+    <a href="#bottleneck"><i>3</i>Bottleneck</a>
+    <a href="#queue"><i>4</i>Waiting lines</a>
+    <a href="#balance"><i>5</i>Line balancing</a>
+    <a href="#service"><i>6</i>Service variability</a>
+    <a href="#levers"><i>7</i>Redesign levers</a>
+    <a href="#value"><i>8</i>Value chains</a>
+    <a href="#models"><i>9</i>Process models</a>
+    <a href="#trauma"><i>10</i>Trauma case</a>
+    <a href="#glossary"><i>11</i>Glossary</a>
+    </nav>
+    <div class="tb-actions">
+      <span class="kbd" title="Keyboard: J next step, K previous step, N notes on or off">J / K · N</span>
+      <button type="button" id="notes-all" aria-pressed="true">Notes: on</button>
+    </div>
+  </div>
+
+<!-- 1 -->
+  <section class="topic" id="overview" data-nav="Three zoom levels">
+    <div class="main">
+      <div class="head"><span class="num">1</span><h2>Three zoom levels</h2></div>
+      <p class="idea">Improve a service by looking at it at three levels: <mark>the value chain</mark> (which stages), <mark>the process</mark> (which steps and waits), and <mark>the encounter</mark> (what the patient actually experiences).</p>
+      <div class="viz">
+        <div class="chips" id="z-chips" role="group" aria-label="Zoom level"></div>
+        <div class="chart"><svg id="z-chart" viewBox="0 0 680 250" role="img" aria-label="The selected zoom level of a hospital trauma service."></svg></div>
+        <p class="cap">Generic hospital trauma pathway for illustration, not taken from the case.</p>
+      </div>
+      <div class="card" id="z-card" aria-live="polite"></div>
+      <div class="take">Most of a patient's time is spent between steps, not in them. You find that time only at the process level, and you judge whether it matters at the encounter level.</div>
+    </div>
+    <div class="notes">
+      <label for="n-overview">Notes <em data-for="overview"></em></label>
+      <textarea id="n-overview" data-topic="overview" placeholder="How the prof frames the session..."></textarea>
+    </div>
+  </section>
+
+  <div class="group-label">Mapping</div>
+
+  <!-- 2 -->
+  <section class="topic" id="map" data-nav="Process map">
+    <div class="main">
+      <div class="head"><span class="num">2</span><h2>Reading a process map</h2></div>
+      <p class="idea">A swimlane map puts each role in its own row. Every arrow that crosses a lane is a <mark>handoff</mark>; every triangle is a <mark>wait</mark>. Both are where time and errors pile up.</p>
+      <div class="viz">
+        <div class="chips" role="group" aria-label="Map options">
+          <button type="button" id="m-waits" aria-pressed="true">Show waits</button>
+          <button type="button" id="m-va" aria-pressed="false">Colour by value added</button>
+        </div>
+        <div class="chart"><svg id="map-chart" viewBox="0 0 680 330" role="img" aria-label="Swimlane process map of a trauma patient's path across four lanes: paramedics, trauma team, imaging, and surgery. Tap a step for detail."></svg></div>
+        <div class="legend" id="map-legend"></div>
+        <p class="cap">Illustrative map, not the case's. Tap any shape. Replace it with the case's own steps in class.</p>
+      </div>
+      <div class="readout" id="map-sum"></div>
+      <div class="card" id="map-card" aria-live="polite"></div>
+      <details><summary>The symbols and the three kinds of time</summary><div class="more">
+        <p><b>Rectangle:</b> activity. <b>Diamond:</b> decision. <b>Triangle:</b> wait or inventory (patients in a queue are inventory). <b>Arrow:</b> flow of the patient, material or information. <b>Lanes:</b> who does it.</p>
+        <p><b>Value added:</b> the patient would pay for it and it changes their condition (resuscitation, scan, operation). <b>Necessary, not value added:</b> required by safety or rules (handover, documentation). <b>Waste:</b> waiting, rework, searching, repeated questions.</p>
+        <p><b>Service blueprint:</b> a map with a <b>line of visibility</b>. Above it is what the patient sees (front stage); below it is the support work they never see (back stage).</p>
+      </div></details>
+      <div class="take">Hide the waits and the map looks efficient. Show them and you see where the redesign has to happen: between lanes, at the scanner and the operating room.</div>
+    </div>
+    <div class="notes">
+      <label for="n-map">Notes <em data-for="map"></em></label>
+      <textarea id="n-map" data-topic="map" placeholder="Steps, handoffs and waits in the case..."></textarea>
+    </div>
+  </section>
+
+  <div class="group-label">Measuring</div>
+
+  <!-- 3 -->
+  <section class="topic" id="bottleneck" data-nav="Bottleneck">
+    <div class="main">
+      <div class="head"><span class="num">3</span><h2>Find the bottleneck</h2></div>
+      <p class="idea">Each step can serve so many patients an hour. The step with the lowest capacity is the <mark>bottleneck</mark>, and it sets the capacity of the whole process.</p>
+      <div class="viz">
+        <div class="steps"><table>
+          <thead><tr><th>Step</th><th>Minutes per patient</th><th>Parallel resources</th><th>Capacity / hr</th><th>Utilization</th><th></th></tr></thead>
+          <tbody id="bn-body"></tbody>
+        </table></div>
+        <div class="wsbar">
+          <button type="button" id="bn-add">Add a step</button>
+          <button type="button" id="bn-reset">Reset to example</button>
+          <span class="cap">Example numbers. Type in the case's own figures.</span>
+        </div>
+        <div class="controls">
+          <div class="ctl"><label for="bn-lam">Patients arriving per hour <output id="bn-lam-out"></output></label><input type="range" id="bn-lam" min="0.5" max="10" step="0.5" value="2.5"></div>
+          <div class="ctl"><label for="bn-w">Average hours in the department <output id="bn-w-out"></output></label><input type="range" id="bn-w" min="0.5" max="12" step="0.5" value="4"></div>
+        </div>
+      </div>
+      <div class="viz side"><div class="chart"><svg id="bn-chart" viewBox="0 0 680 240" role="img" aria-label="Bars show each step's capacity per hour. A vertical line shows the arrival rate. The shortest bar is the bottleneck."></svg></div></div>
+      <div class="readout" id="bn-sum"></div>
+      <details><summary>The formulas</summary><div class="more">
+        <p><b>Capacity per hour</b> = 60 ÷ minutes per patient × number of parallel resources.</p>
+        <p><b>Utilization</b> = arrival rate ÷ capacity. Above 100%, the queue in front of that step grows without limit.</p>
+        <p><b>Little's Law:</b> patients in the system (L) = arrival rate (λ) × average time in the system (W). It holds for any stable process. Cut W and you free beds without adding any.</p>
+        <p><b>Process efficiency</b> = value-added time ÷ total time in the system.</p>
+      </div></details>
+      <div class="take">Adding capacity anywhere except the bottleneck changes nothing. Once you fix it, the bottleneck moves to the next-lowest step.</div>
+    </div>
+    <div class="notes">
+      <label for="n-bottleneck">Notes <em data-for="bottleneck"></em></label>
+      <textarea id="n-bottleneck" data-topic="bottleneck" placeholder="The case's bottleneck, and what moves it..."></textarea>
+    </div>
+  </section>
+
+  <!-- 4 -->
+  <section class="topic" id="queue" data-nav="Waiting lines">
+    <div class="main">
+      <div class="head"><span class="num">4</span><h2>Why waits explode near 100%</h2></div>
+      <p class="idea">With random arrivals, waiting time does not rise in a straight line. It <mark>shoots up as utilization nears 100%</mark>. A second server, or one shared line, cuts it sharply.</p>
+      <div class="viz">
+        <div class="controls">
+          <div class="ctl"><label for="q-lam">Arrival rate λ (per hour) <output id="q-lam-out"></output></label><input type="range" id="q-lam" min="0.5" max="20" step="0.5" value="3"></div>
+          <div class="ctl"><label for="q-mu">Service rate μ per server (per hour) <output id="q-mu-out"></output></label><input type="range" id="q-mu" min="1" max="20" step="0.5" value="4"></div>
+          <div class="ctl"><label for="q-s">Servers s <output id="q-s-out"></output></label><input type="range" id="q-s" min="1" max="6" step="1" value="1"></div>
+        </div>
+        <div class="chart"><svg id="q-chart" viewBox="0 0 680 270" role="img" aria-label="Average wait in the queue, in minutes, against utilization, for one, two and three servers. A dot marks the current settings."></svg></div>
+        <p class="cap">Same model as the instructor's "Waiting Line Single Server" and "Multiple Servers" spreadsheets (M/M/1 and M/M/s). The defaults (λ = 3, μ = 4, s = 1) match the spreadsheets.</p>
+      </div>
+      <div class="card" id="q-pool" aria-live="polite"></div>
+      <div class="readout" id="q-sum"></div>
+      <details><summary>The formulas (M/M/s)</summary><div class="more">
+        <p>a = λ/μ, utilization ρ = λ/(sμ). P0 = 1 ÷ [Σ<sub>n=0..s-1</sub> aⁿ/n! + aˢ/(s!(1-ρ))].</p>
+        <p>Lq = P0 · aˢ · ρ ÷ (s!(1-ρ)²). L = Lq + a. Wq = Lq/λ. W = Wq + 1/μ. For one server: Lq = λ²/(μ(μ-λ)), W = 1/(μ-λ).</p>
+        <p>Assumes random (Poisson) arrivals, exponential service times, first come first served, and no limit on the line. Real trauma arrivals come in bursts, which makes waits worse than the model.</p>
+      </div></details>
+      <div class="take">Running a trauma bay or CT scanner near 100% busy guarantees long waits. Keeping spare capacity is a deliberate choice, not waste, when waiting costs lives.</div>
+    </div>
+    <div class="notes">
+      <label for="n-queue">Notes <em data-for="queue"></em></label>
+      <textarea id="n-queue" data-topic="queue" placeholder="Arrival and service rates in the case..."></textarea>
+    </div>
+  </section>
+
+  <!-- 5 -->
+  <section class="topic" id="balance" data-nav="Line balancing">
+    <div class="main">
+      <div class="head"><span class="num">5</span><h2>Line balancing</h2></div>
+      <p class="idea">Split the tasks among stations so that <mark>no station takes longer than the cycle time</mark> and as little time as possible sits idle. The same logic applies to splitting work among a trauma team.</p>
+      <div class="viz side"><div class="chart"><svg id="pg-chart" viewBox="0 0 680 210" role="img" aria-label="Precedence diagram of tasks A to I with their times."></svg></div></div>
+      <div class="viz">
+        <div class="chips" id="lb-rules" role="group" aria-label="Priority rule"></div>
+        <div class="controls">
+          <div class="ctl"><label for="lb-c">Cycle time <output id="lb-c-out"></output></label><input type="range" id="lb-c" min="12" max="40" step="1" value="12"></div>
+        </div>
+        <div class="chart"><svg id="lb-chart" viewBox="0 0 680 260" role="img" aria-label="Stations as bars, each split into its tasks, against the cycle time line."></svg></div>
+        <p class="cap">Tasks, times and the cycle time of 12 are from the instructor's "Line Balancing" spreadsheet. Same four priority rules.</p>
+      </div>
+      <div class="readout" id="lb-sum"></div>
+      <details><summary>How the heuristic works</summary><div class="more">
+        <p>Open station 1. List the tasks whose predecessors are done and that fit in the time left. Pick one by the priority rule. Repeat until nothing fits, then open the next station.</p>
+        <p><b>Minimum stations</b> = total task time ÷ cycle time, rounded up. <b>Efficiency</b> = total task time ÷ (stations × cycle time). <b>Balance delay</b> = 1 − efficiency.</p>
+        <p><b>Cycle time</b> (or takt time) = available time ÷ required output. A shorter cycle means more output and more stations.</p>
+      </div></details>
+      <div class="take">The rule matters less than the cycle time. The longest single task sets the shortest possible cycle, so splitting that task is often the real fix.</div>
+    </div>
+    <div class="notes">
+      <label for="n-balance">Notes <em data-for="balance"></em></label>
+      <textarea id="n-balance" data-topic="balance" placeholder="Which rule did best at which cycle time..."></textarea>
+    </div>
+  </section>
+
+  <div class="group-label">Improving</div>
+
+  <!-- 6 -->
+  <section class="topic" id="service" data-nav="Service variability">
+    <div class="main nosplit">
+      <div class="head"><span class="num">6</span><h2>Service is different: the customer is in the process</h2></div>
+      <p class="idea">In a factory you can buffer with inventory. In a service the customer <mark>brings variability into the process</mark>, and you either <mark>accommodate</mark> it or <mark>reduce</mark> it.</p>
+      <div class="viz">
+        <div class="chips" id="sv-mode" role="group" aria-label="Strategy"></div>
+        <div class="vgrid" id="sv-grid"></div>
+        <p class="cap">Five types of customer-introduced variability: Frei, F.X. (2006), "Breaking the Trade-Off Between Efficiency and Service", HBR. Trauma examples are mine.</p>
+      </div>
+      <details><summary>Four ways services differ from manufacturing</summary><div class="more"><ul>
+        <li><b>Simultaneous:</b> produced and consumed at once, so no finished-goods buffer.</li>
+        <li><b>Perishable capacity:</b> an empty trauma bay at 3 AM can't be stored for 6 PM.</li>
+        <li><b>Customer participation:</b> the patient's condition and history are inputs.</li>
+        <li><b>Intangible:</b> quality is partly the experience (being told what is happening), not only the outcome.</li>
+      </ul></div></details>
+      <div class="take">Trauma care mostly has to accommodate (you can't refuse a patient), so the levers are on the hospital's side: spare capacity, flexible staff, and standard protocols.</div>
+    </div>
+    <div class="notes">
+      <label for="n-service">Notes <em data-for="service"></em></label>
+      <textarea id="n-service" data-topic="service" placeholder="Variability in the case, and how it is handled..."></textarea>
+    </div>
+  </section>
+
+  <!-- 7 -->
+  <section class="topic" id="levers" data-nav="Redesign levers">
+    <div class="main" data-cols="wideA">
+      <div class="head"><span class="num">7</span><h2>From map to redesign</h2></div>
+      <p class="idea">Once the map shows the waits and the bottleneck, a small set of levers covers most redesigns. Tap a lever to see <mark>what it changes</mark> and a trauma example.</p>
+      <div class="viz">
+        <div class="lever" id="lv-table"></div>
+      </div>
+      <div class="card" id="lv-card" aria-live="polite"></div>
+      <div class="take">Good redesigns combine levers: segment the flow, run steps in parallel, and protect the bottleneck. Then check the result with Little's Law: shorter time in the system means fewer patients waiting, with the same beds.</div>
+    </div>
+    <div class="notes">
+      <label for="n-levers">Notes <em data-for="levers"></em></label>
+      <textarea id="n-levers" data-topic="levers" placeholder="Which levers the case uses..."></textarea>
+    </div>
+  </section>
+
+  <div class="group-label">Readings and case</div>
+
+  <!-- 8 -->
+  <section class="topic" id="value" data-nav="Value chains">
+    <div class="main">
+      <div class="head"><span class="num">8</span><h2>Value chains and who controls them</h2></div>
+      <p class="idea">Ponte, Gereffi and Raj-Reichert (2019) ask two questions about any value chain: <mark>who coordinates it</mark> (governance) and <mark>how a participant moves up</mark> (upgrading).</p>
+      <div class="viz">
+        <div class="chart"><svg id="gv-chart" viewBox="0 0 680 230" role="img" aria-label="Five governance types from market to hierarchy, with explicit coordination and power asymmetry rising from left to right. Tap a type."></svg></div>
+      </div>
+      <div class="card" id="gv-card" aria-live="polite"></div>
+      <details><summary>Four kinds of upgrading</summary><div class="more"><ul>
+        <li><b>Process:</b> do the same thing more efficiently (a faster trauma pathway).</li>
+        <li><b>Product:</b> offer a better or higher-value service (a Level I trauma centre).</li>
+        <li><b>Functional:</b> take on higher-value functions (research, training other hospitals).</li>
+        <li><b>Chain:</b> use the capability in a new chain (the trauma system design sold as a model).</li>
+      </ul></div></details>
+      <p class="cap">Governance types from Gereffi, Humphrey and Sturgeon (2005), the framework the handbook's introduction builds on. Summary from the published literature; check against the reading.</p>
+      <div class="take">For a hospital, the trauma "chain" runs from paramedics to rehab across separate organizations. Redesigning one link without the handoffs on either side moves the wait somewhere else.</div>
+    </div>
+    <div class="notes">
+      <label for="n-value">Notes <em data-for="value"></em></label>
+      <textarea id="n-value" data-topic="value" placeholder="Who coordinates the trauma chain in the case..."></textarea>
+    </div>
+  </section>
+
+  <!-- 9 -->
+  <section class="topic" id="models" data-nav="Process models">
+    <div class="main">
+      <div class="head"><span class="num">9</span><h2>Which process model for which question</h2></div>
+      <p class="idea">O'Donovan, Eckert, Clarkson and Browning (2005) review process models. Each answers a different question, so <mark>pick the model from the question</mark>.</p>
+      <div class="viz">
+        <div class="chips" id="md-chips" role="group" aria-label="Question"></div>
+        <div class="mgrid" id="md-grid"></div>
+      </div>
+      <p class="cap">My summary of the model families covered in this literature, not a page-by-page summary of pp. 60-87. Check the chapter before quoting.</p>
+      <div class="take">A flowchart is enough to find waits. If the problem is rework loops between teams, a dependency matrix shows it better; if it is variable demand, you need a simulation or queueing model.</div>
+    </div>
+    <div class="notes">
+      <label for="n-models">Notes <em data-for="models"></em></label>
+      <textarea id="n-models" data-topic="models" placeholder="Points from the reading..."></textarea>
+    </div>
+  </section>
+
+  <!-- 10 -->
+  <section class="topic" id="trauma" data-nav="Trauma case">
+    <div class="main">
+      <div class="head"><span class="num">10</span><h2>Working the trauma case</h2></div>
+      <p class="idea">The same five moves work for any service redesign. Use them as the <mark>order of attack</mark> in class.</p>
+      <div class="viz">
+        <div class="flow5" id="t5"></div>
+        <div class="card" id="t5-card" aria-live="polite"></div>
+      </div>
+      <details open data-col="a"><summary>Questions to have answers for</summary><div class="more"><ol>
+        <li>Draw the current trauma process as a swimlane map. Where are the handoffs and waits?</li>
+        <li>Which step is the bottleneck, and what is its utilization?</li>
+        <li>What share of a patient's time adds value?</li>
+        <li>Which sources of variability matter most, and should the hospital accommodate or reduce each one?</li>
+        <li>What is your redesign? Which levers does it use, and where does the bottleneck move next?</li>
+        <li>How does the redesign change the patient's experience, not only the throughput?</li>
+      </ol></div></details>
+      <div class="frame"><div class="fh"><b>Answer frame</b><button type="button" class="addframe" data-target="n-trauma">Add to my notes</button></div><pre>Current bottleneck (and utilization):
+Biggest wait, and its cause:
+Redesign (levers used):
+Expected effect (Little's Law: L = λW):
+Where the bottleneck moves next:
+Effect on the patient's experience:</pre></div>
+      <p class="cap">The case text was not available when this page was built, so the example numbers are generic. Put the case's figures into steps 3 and 4.</p>
+      <div class="take">Map, measure, diagnose, redesign, judge: in that order, and check every redesign with the same tools you used to diagnose.</div>
+    </div>
+    <div class="notes">
+      <label for="n-trauma">Notes <em data-for="trauma"></em></label>
+      <textarea id="n-trauma" data-topic="trauma" placeholder="Case facts and the class's redesign..."></textarea>
+    </div>
+  </section>
+
+  <!-- 11 -->
+  <section class="topic" id="glossary" data-nav="Glossary">
+    <div class="main">
+      <div class="head"><span class="num">11</span><h2>Glossary</h2></div>
+      <dl class="gloss">
+        <dt>Bottleneck</dt><dd>The step with the lowest capacity. It sets the output of the whole process.</dd>
+        <dt>Capacity</dt><dd>The most a step can process per unit of time: resources × 60 ÷ minutes per unit.</dd>
+        <dt>Utilization (ρ)</dt><dd>Demand ÷ capacity. Waits grow sharply as it nears 100%.</dd>
+        <dt>Flow time</dt><dd>Total time a unit spends in the process, including waits.</dd>
+        <dt>Little's Law</dt><dd>L = λW. Units in the system = arrival rate × time in the system.</dd>
+        <dt>Cycle time</dt><dd>Time between finished units leaving a line; the longest station time.</dd>
+        <dt>Takt time</dt><dd>Available time ÷ customer demand: the pace the process must match.</dd>
+        <dt>Balance delay</dt><dd>Share of station time left idle: 1 − efficiency.</dd>
+        <dt>Swimlane</dt><dd>A row of a process map showing one role's work.</dd>
+        <dt>Line of visibility</dt><dd>The line in a service blueprint between what the customer sees and the back stage.</dd>
+        <dt>Value added</dt><dd>Work that changes the product or the customer's condition in a way they would pay for.</dd>
+        <dt>M/M/s</dt><dd>Queue with random arrivals, random service times and s servers.</dd>
+        <dt>Pooling</dt><dd>Serving several streams from one shared queue and set of servers; cuts waits at the same utilization.</dd>
+        <dt>GVC governance</dt><dd>How a global value chain is coordinated: market, modular, relational, captive, or hierarchy.</dd>
+      </dl>
+    </div>
+    <div class="notes">
+      <label for="n-takeaways">Takeaways <em data-for="takeaways"></em></label>
+      <textarea id="n-takeaways" data-topic="takeaways" placeholder="The three things to remember for the Nov 10 assignment..."></textarea>
+    </div>
+  </section>
+
+  <footer>Sources: Instructor spreadsheets (Waiting Line Single Server, Waiting Line Multiple Servers, Line Balancing). Frei, F.X. (2006), HBR 84(11). Gereffi, G., Humphrey, J. and Sturgeon, T. (2005), Review of International Political Economy 12(1). Ponte, S., Gereffi, G. and Raj-Reichert, G. (2019), Handbook on Global Value Chains. O'Donovan, B. et al. (2005), Design Process Improvement. Class study aid, Oct 17, 2026.</footer>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  var PAGE={"notesKey": "cnp-example-ops-notes", "notesDoc": "cnpexampleops"};
+// Shared helpers for class notes pages. Loaded before the page's own app.js.
+  var NS="http://www.w3.org/2000/svg";
+  function el(tag,attrs,parent){var e=document.createElementNS(NS,tag);for(var k in attrs)e.setAttribute(k,attrs[k]);if(parent)parent.appendChild(e);return e}
+  function txt(p,x,y,s,o){o=o||{};var t=el("text",{x:x,y:y,"text-anchor":o.anchor||"start",fill:o.fill||"var(--muted)","font-size":o.size||12,"font-family":o.mono?"var(--mono)":(o.disp?"var(--display)":"var(--body)"),"font-weight":o.weight||400},p);t.textContent=s;return t}
+  function lines(p,x,y,arr,o){o=o||{};arr.forEach(function(s,i){txt(p,x,y+i*(o.lh||15),s,o)})}
+  function clear(svg){while(svg.firstChild)svg.removeChild(svg.firstChild)}
+  function fmt(v){return v.toLocaleString()}
+  function arrowDef(svg,id,color){var d=el("defs",{},svg);var m=el("marker",{id:id,viewBox:"0 0 10 10",refX:9,refY:5,markerWidth:7,markerHeight:7,orient:"auto-start-reverse"},d);el("path",{d:"M0,0 L10,5 L0,10 z",fill:color},m)}
+  function card(id,title,who,body){var c=document.getElementById(id);c.innerHTML="";var b=document.createElement("b");b.textContent=title;c.appendChild(b);if(who){var w=document.createElement("span");w.className="who";w.textContent=who;c.appendChild(w)}var p=document.createElement("p");p.textContent=body;c.appendChild(p)}
+  function hit(g,label,fn){g.setAttribute("class","hit");g.setAttribute("tabindex","0");g.setAttribute("role","button");g.setAttribute("aria-label",label);g.addEventListener("click",fn);g.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();fn()}})}
+  function ls(k,d){try{var v=JSON.parse(localStorage.getItem(k));return v==null?d:v}catch(e){return d}}
+  function lsw(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}
+  function chipset(box,labels,on,fn){box.innerHTML="";labels.forEach(function(l,i){var b=document.createElement("button");b.type="button";b.textContent=l;b.addEventListener("click",function(){fn(i);paint(i)});box.appendChild(b)});
+    function paint(k){[].forEach.call(box.children,function(b,i){b.classList.toggle("on",i===k);b.setAttribute("aria-pressed",i===k)})}paint(on);return paint}
+  function tiles(id,arr){var box=document.getElementById(id);box.innerHTML="";arr.forEach(function(q){var d=document.createElement("div"),b=document.createElement("b"),sp=document.createElement("span");b.textContent=q[0];sp.textContent=q[1];if(q[2])b.style.color=q[2];d.appendChild(b);d.appendChild(sp);box.appendChild(d)})}
+  function f1(x){return (Math.round(x*10)/10).toString()}
+  function f2(x){return (Math.round(x*100)/100).toString()}
+
+
+  // 1. Zoom levels
+  (function(){
+    var s=document.getElementById("z-chart");arrowDef(s,"az","var(--muted)");
+    var L=[
+      ["Value chain","Stages, often run by different organizations","Pre-hospital care, the emergency department, imaging, surgery, intensive care and rehab are separate units with separate budgets. A wait often sits at the boundary between two of them."],
+      ["Process","Steps, handoffs and waits inside one stage","Inside the emergency department the patient moves through triage, resuscitation and imaging, with waits in between. This is where you map, measure and find the bottleneck."],
+      ["Encounter","What the patient and family see","Front stage: being met, assessed, scanned and told the plan. Back stage: bed requests, booking the scanner and the operating room. The line of visibility separates them."]];
+    function chev(x,y,w,h,fill,stroke,label,on){var p="M"+x+","+y+" L"+(x+w-14)+","+y+" L"+(x+w)+","+(y+h/2)+" L"+(x+w-14)+","+(y+h)+" L"+x+","+(y+h)+" L"+(x+14)+","+(y+h/2)+" z";
+      el("path",{d:p,fill:fill,stroke:stroke,"stroke-width":on?2.5:1},s);lines(s,x+w/2+4,y+h/2-(label.length-1)*7+4,label,{anchor:"middle",size:12.5,weight:700,fill:on?"var(--paper)":"var(--ink)",lh:14})}
+    function box(x,y,w,h,label,fill,ink){el("rect",{x:x,y:y,width:w,height:h,rx:7,fill:fill,stroke:"var(--accent)","stroke-width":1.5},s);lines(s,x+w/2,y+h/2-(label.length-1)*7+4,label,{anchor:"middle",size:12,weight:700,fill:ink||"var(--ink)",lh:14})}
+    function wait(x,y){el("path",{d:"M"+(x-13)+","+(y-11)+" L"+(x+13)+","+(y-11)+" L"+x+","+(y+12)+" z",fill:"var(--signal-soft)",stroke:"var(--signal)","stroke-width":1.5},s)}
+    function arr(x1,y1,x2,y2){el("line",{x1:x1,y1:y1,x2:x2,y2:y2,stroke:"var(--muted)","stroke-width":1.5,"marker-end":"url(#az)"},s)}
+    function draw(k){clear(s);arrowDef(s,"az","var(--muted)");
+      if(k===0){var st=[["Pre-","hospital"],["Emergency","dept"],["Imaging"],["Surgery"],["ICU /","ward"],["Rehab,","discharge"]];
+        st.forEach(function(n,i){var on=i===1;chev(8+i*111,70,118,74,on?"var(--accent)":"var(--accent-soft)","var(--accent)",n,on)});
+        txt(s,340,40,"Each stage is often a different unit, budget or organization",{anchor:"middle",size:13});
+        for(var i=1;i<6;i++){var x=18+i*111;el("circle",{cx:x,cy:170,r:5,fill:"var(--signal)"},s)}
+        txt(s,340,198,"Amber dots = handoffs between units, where waits tend to sit",{anchor:"middle",size:12.5,fill:"var(--signal)",weight:700});
+        txt(s,119+55,226,"▲ zoom in on this stage next",{anchor:"middle",size:11.5,fill:"var(--accent)"});}
+      else if(k===1){var xs=[12,128,244,360,476,592],lab=[["Arrive"],["Triage"],["Resus"],["CT"],["Decide"],["OR / ICU"]];
+        xs.forEach(function(x,i){box(x,96,76,48,lab[i],i===2||i===3||i===5?"var(--accent-soft)":"var(--paper)");if(i<5){var mx=x+76+20;arr(x+76,120,mx-14,120);wait(mx,120);arr(mx+14,120,xs[i+1],120)}});
+        txt(s,340,50,"Activities (boxes) and waits (triangles) inside the emergency department",{anchor:"middle",size:13});
+        txt(s,340,190,"Shaded boxes add value. The triangles are often most of the clock time.",{anchor:"middle",size:12.5,fill:"var(--signal)",weight:700});}
+      else{txt(s,14,30,"FRONT STAGE · what the patient sees",{size:11.5,weight:700,mono:true,fill:"var(--accent)"});
+        ["Met at the door","Assessed","Scanned","Told the plan","Moved to a bed"].forEach(function(t,i){box(14+i*132,44,116,44,[t],"var(--accent-soft)")});
+        el("line",{x1:8,y1:124,x2:672,y2:124,stroke:"var(--signal)","stroke-width":2,"stroke-dasharray":"7 5"},s);
+        txt(s,672,116,"line of visibility",{anchor:"end",size:11.5,weight:700,fill:"var(--signal)"});
+        txt(s,14,152,"BACK STAGE · support the patient never sees",{size:11.5,weight:700,mono:true,fill:"var(--muted)"});
+        ["Pre-alert call","Team paged","CT booked","OR scheduled","Bed found"].forEach(function(t,i){box(14+i*132,166,116,44,[t],"var(--paper)");arr(72+i*132,166,72+i*132,92)});}
+      card("z-card",L[k][0],L[k][1],L[k][2])}
+    chipset(document.getElementById("z-chips"),L.map(function(l){return l[0]}),0,draw);draw(0);
+  })();
+
+  // 2. Swimlane map
+  (function(){
+    var s=document.getElementById("map-chart"),showW=true,showVA=false;
+    var lanes=["Paramedics","Trauma team","Imaging","Surgery"],LT=26,LH=72,LX=96;
+    var N=[
+      {id:"pre",lane:0,x:160,t:"task",l:["Pre-alert","call"],c:"n",d:"Paramedics phone ahead with mechanism of injury and vital signs, so the team is assembled before the patient arrives. Information flows ahead of the patient."},
+      {id:"hand",lane:0,x:265,t:"task",l:["Handover"],c:"n",d:"Structured handover at the bedside, often in a fixed format such as MIST (mechanism, injuries, signs, treatment). Necessary but adds no treatment."},
+      {id:"res",lane:1,x:265,t:"task",l:["Primary survey","+ resus"],c:"v",d:"Airway, breathing, circulation, disability, exposure. Value added: this changes the patient's condition. The trauma bay is a shared, fixed resource."},
+      {id:"w1",lane:2,x:355,t:"wait",l:["Wait for CT"],c:"w",d:"The patient waits for the scanner and a transfer team. A common bottleneck when one scanner serves the whole emergency department."},
+      {id:"ct",lane:2,x:445,t:"task",l:["CT scan"],c:"v",d:"Diagnostic imaging. Value added. Some hospitals put a scanner in or beside the trauma bay to remove the transfer and the wait."},
+      {id:"dec",lane:1,x:445,t:"dec",l:["Surgery?"],c:"n",d:"Decision point. The decision waits for the scan report and a surgeon's review, so a slow report delays everything after it."},
+      {id:"w2",lane:3,x:548,t:"wait",l:["Wait for OR"],c:"w",d:"Waiting for an operating room and a team. Elective cases compete for the same rooms unless one is held open for trauma."},
+      {id:"or",lane:3,x:625,t:"task",l:["Operation"],c:"v",d:"Value added. The surgery itself."},
+      {id:"w3",lane:1,x:515,t:"wait",l:["Wait for bed"],c:"w",d:"Boarding: the patient is treated but stays in the emergency department because no ward or intensive care bed is free. It blocks the trauma bay for the next patient."},
+      {id:"adm",lane:1,x:625,t:"task",l:["Admit to","ward / ICU"],c:"n",d:"Transfer to the inpatient unit. Necessary, not value added."}];
+    var E=[["pre","hand"],["hand","res"],["res","w1"],["w1","ct"],["ct","dec"],["dec","w2","yes"],["w2","or"],["dec","w3","no"],["w3","adm"]];
+    var byId={};N.forEach(function(n){byId[n.id]=n});
+    var CC={v:["var(--good-soft)","var(--good)","Value added"],n:["var(--paper)","var(--accent)","Necessary, not value added"],w:["var(--signal-soft)","var(--signal)","Wait (waste)"]};
+    function cy(n){return LT+n.lane*LH+LH/2}
+    function edges(){if(showW)return E;var out=[];E.forEach(function(e){if(byId[e[0]].t==="wait")return;var to=byId[e[1]];if(to.t==="wait"){var nx=E.filter(function(f){return f[0]===to.id})[0];out.push([e[0],nx[1],e[2]])}else out.push(e)});return out}
+    var sel="res";
+    function draw(){clear(s);arrowDef(s,"am","var(--muted)");
+      lanes.forEach(function(l,i){var y=LT+i*LH;el("rect",{x:0,y:y,width:680,height:LH,fill:i%2?"var(--bg)":"var(--paper)",stroke:"var(--line)"},s);
+        el("rect",{x:0,y:y,width:LX-6,height:LH,fill:"var(--accent-soft)"},s);lines(s,8,y+LH/2-(l.indexOf(" ")>0&&l.length>10?3:-4),l.length>10?l.split(" "):[l],{size:12,weight:700,fill:"var(--accent)",lh:14})});
+      txt(s,LX,16,"Time runs left to right →",{size:11.5,mono:true});
+      edges().forEach(function(e){var a=byId[e[0]],b=byId[e[1]],x1=a.x,y1=cy(a),x2=b.x,y2=cy(b),hw=function(n){return n.t==="wait"?16:n.t==="dec"?34:46};
+        var d;if(y1===y2)d="M"+(x1+hw(a))+","+y1+" L"+(x2-hw(b))+","+y2;
+        else if(x1===x2)d="M"+x1+","+(y1+(y2>y1?22:-22))+" L"+x2+","+(y2+(y2>y1?-22:22));
+        else{var mx=x2;d="M"+(x1+hw(a))+","+y1+" L"+mx+","+y1+" L"+mx+","+(y2+(y2>y1?-22:22))}
+        var cross=a.lane!==b.lane;el("path",{d:d,fill:"none",stroke:cross?"var(--signal)":"var(--muted)","stroke-width":cross?2:1.5,"marker-end":"url(#am)"},s);
+        if(e[2])txt(s,(y1===y2?(x1+x2)/2:x2+6),(y1===y2?y1-6:(y1+y2)/2+4),e[2],{size:11,weight:700,fill:"var(--muted)",anchor:y1===y2?"middle":"start"})});
+      N.forEach(function(n){if(n.t==="wait"&&!showW)return;var g=el("g",{},s),y=cy(n),on=n.id===sel,col=showVA?CC[n.c]:[n.t==="wait"?"var(--signal-soft)":"var(--paper)",n.t==="wait"?"var(--signal)":"var(--accent)"];
+        var sw=on?3:1.5;
+        if(n.t==="task")el("rect",{x:n.x-46,y:y-21,width:92,height:42,rx:6,fill:col[0],stroke:col[1],"stroke-width":sw},g);
+        else if(n.t==="dec")el("path",{d:"M"+(n.x-34)+","+y+" L"+n.x+","+(y-24)+" L"+(n.x+34)+","+y+" L"+n.x+","+(y+24)+" z",fill:col[0],stroke:col[1],"stroke-width":sw},g);
+        else el("path",{d:"M"+(n.x-16)+","+(y-15)+" L"+(n.x+16)+","+(y-15)+" L"+n.x+","+(y+14)+" z",fill:col[0],stroke:col[1],"stroke-width":sw},g);
+        if(n.t==="wait")txt(g,n.x,y+29,n.l[0],{anchor:"middle",size:10.5,weight:700,fill:"var(--signal)"});
+        else lines(g,n.x,y+4-(n.l.length-1)*6.5,n.l,{anchor:"middle",size:11,weight:700,fill:"var(--ink)",lh:13});
+        hit(g,n.l.join(" "),function(){sel=n.id;draw();pick()})});
+    }
+    function pick(){var n=byId[sel];card("map-card",n.l.join(" "),lanes[n.lane]+" · "+CC[n.c][2],n.d)}
+    function sum(){var c={v:0,n:0,w:0};N.forEach(function(n){c[n.c]++});var hand=E.filter(function(e){return byId[e[0]].lane!==byId[e[1]].lane}).length;
+      tiles("map-sum",[[c.v,"value-added steps","var(--good)"],[c.n,"necessary, not value added"],[c.w,"waits","var(--signal)"],[hand,"handoffs between lanes (amber arrows)","var(--signal)"]])}
+    var lg=document.getElementById("map-legend");
+    function legend(){lg.innerHTML="";(showVA?["v","n","w"]:["n","w"]).forEach(function(k){var sp=document.createElement("span");var i=document.createElement("i");i.style.background=showVA?CC[k][0]:(k==="w"?"var(--signal-soft)":"var(--paper)");i.style.borderColor=showVA?CC[k][1]:(k==="w"?"var(--signal)":"var(--accent)");sp.appendChild(i);sp.appendChild(document.createTextNode(showVA?CC[k][2]:(k==="w"?"Wait":"Activity or decision")));lg.appendChild(sp)});
+      var sp=document.createElement("span");sp.innerHTML='<i style="border:0;height:3px;background:var(--signal)"></i>';sp.appendChild(document.createTextNode("Handoff between lanes"));lg.appendChild(sp)}
+    var bw=document.getElementById("m-waits"),bv=document.getElementById("m-va");
+    function btns(){bw.classList.toggle("on",showW);bw.setAttribute("aria-pressed",showW);bv.classList.toggle("on",showVA);bv.setAttribute("aria-pressed",showVA)}
+    bw.addEventListener("click",function(){showW=!showW;if(!showW&&byId[sel].t==="wait")sel="res";btns();draw();pick()});
+    bv.addEventListener("click",function(){showVA=!showVA;btns();legend();draw()});
+    btns();legend();draw();pick();sum();
+  })();
+
+  // 3. Bottleneck builder
+  (function(){
+    var K="mba535-s4-steps",EX=[["Triage",5,1],["Resuscitation",30,2],["CT scan",15,1],["Surgeon review",20,1],["Transfer out",25,2]];
+    var rows=ls(K,null);if(!Array.isArray(rows)||!rows.length)rows=EX.map(function(r){return r.slice()});
+    var tb=document.getElementById("bn-body"),lam=document.getElementById("bn-lam"),wh=document.getElementById("bn-w"),s=document.getElementById("bn-chart");
+    function cap(r){var m=+r[1],n=+r[2];return m>0&&n>0?60/m*n:0}
+    function build(){tb.innerHTML="";rows.forEach(function(r,i){var tr=document.createElement("tr");
+      [0,1,2].forEach(function(c){var td=document.createElement("td"),inp=document.createElement("input");inp.type=c?"number":"text";inp.id="bn-"+i+"-"+c;if(c){inp.min=c===1?"0.5":"1";inp.step=c===1?"0.5":"1";inp.inputMode="decimal"}inp.value=r[c];inp.setAttribute("aria-label",["Step name","Minutes per patient","Parallel resources"][c]+", row "+(i+1));
+        inp.addEventListener("input",function(){r[c]=c?parseFloat(inp.value)||0:inp.value;lsw(K,rows);calc()});td.appendChild(inp);tr.appendChild(td)});
+      var c1=document.createElement("td");c1.className="numc";tr.appendChild(c1);var c2=document.createElement("td");c2.className="numc";tr.appendChild(c2);
+      var c3=document.createElement("td"),rm=document.createElement("button");rm.type="button";rm.className="rm";rm.textContent="×";rm.setAttribute("aria-label","Remove "+(r[0]||"step"));rm.addEventListener("click",function(){rows.splice(i,1);lsw(K,rows);build()});c3.appendChild(rm);tr.appendChild(c3);
+      r._c=[c1,c2];tb.appendChild(tr)});calc()}
+    function calc(){var L=+lam.value,W=+wh.value;document.getElementById("bn-lam-out").textContent=L+" /hr";document.getElementById("bn-w-out").textContent=W+" h";
+      var caps=rows.map(cap),valid=caps.filter(function(c){return c>0}),min=valid.length?Math.min.apply(null,valid):0,bi=caps.indexOf(min);
+      rows.forEach(function(r,i){var c=caps[i],u=c?L/c:0;r._c[0].textContent=c?f1(c):"·";r._c[1].textContent=c?Math.round(u*100)+"%":"·";r._c[1].style.color=u>=1?"var(--bad)":u>=.85?"var(--signal)":"var(--ink)";r._c[0].style.fontWeight=i===bi?"700":"400"});
+      clear(s);var LX=130,RX=600,T=20,bh=Math.max(14,Math.min(30,(180)/Math.max(rows.length,1)-8)),gap=8,max=Math.max(min*1.2,L*1.3,Math.max.apply(null,caps.concat([1]))),X=function(v){return LX+(RX-LX)*Math.min(v,max)/max};
+      var H=T+rows.length*(bh+gap)+40;s.setAttribute("viewBox","0 0 680 "+Math.max(H,120));
+      [0,max/4,max/2,max*3/4,max].forEach(function(v){el("line",{x1:X(v),y1:T-6,x2:X(v),y2:T+rows.length*(bh+gap),stroke:"var(--line)"},s);txt(s,X(v),T+rows.length*(bh+gap)+16,f1(v),{anchor:"middle",mono:true,size:10.5})});
+      txt(s,RX,T+rows.length*(bh+gap)+32,"patients per hour",{anchor:"end",size:11});
+      rows.forEach(function(r,i){var y=T+i*(bh+gap),c=caps[i],isB=i===bi&&c>0,over=c&&L>c;
+        txt(s,LX-8,y+bh/2+4,(r[0]||"Step "+(i+1)).slice(0,18),{anchor:"end",size:12.5,weight:isB?700:400,fill:"var(--ink)"});
+        el("rect",{x:LX,y:y,width:Math.max(X(c)-LX,1),height:bh,rx:4,fill:isB?"var(--bad)":"var(--accent)",opacity:isB?1:.75},s);
+        if(isB)txt(s,X(c)+6,y+bh/2+4,"bottleneck",{size:11.5,weight:700,fill:"var(--bad)"});
+        if(over&&!isB)txt(s,X(c)+6,y+bh/2+4,"over capacity",{size:11,fill:"var(--bad)"})});
+      el("line",{x1:X(L),y1:T-2,x2:X(L),y2:T+rows.length*(bh+gap)-gap+4,stroke:"var(--signal)","stroke-width":2.5,"stroke-dasharray":"6 4"},s);
+      txt(s,X(L),T-8+ -2,"arrivals "+L+"/hr",{anchor:X(L)>RX-60?"end":"middle",size:11.5,weight:700,fill:"var(--signal)"});
+      var tot=rows.reduce(function(a,r){return a+(+r[1]||0)},0),u=min?L/min:0,b=rows[bi];
+      tiles("bn-sum",[[b&&min?(b[0]||"Step "+(bi+1)):"·","bottleneck","var(--bad)"],[min?f1(min)+" /hr":"·","process capacity"],[min?Math.round(u*100)+"%":"·",u>=1?"bottleneck busy: queue grows "+f1(L-min)+"/hr":"bottleneck utilization",u>=1?"var(--bad)":u>=.85?"var(--signal)":""],[Math.round(tot)+" min","activity time, no waiting"],[f1(L*W),"in the department (L = λW = "+L+" × "+W+")"],[tot?Math.round(tot/60/W*100)+"%":"·","of time spent in activities"]])}
+    lam.addEventListener("input",calc);wh.addEventListener("input",calc);
+    document.getElementById("bn-add").addEventListener("click",function(){rows.push(["New step",10,1]);lsw(K,rows);build();var i=document.getElementById("bn-"+(rows.length-1)+"-0");if(i){i.focus();i.select()}});
+    document.getElementById("bn-reset").addEventListener("click",function(){rows=EX.map(function(r){return r.slice()});lsw(K,rows);build()});
+    build();
+  })();
+
+  // 4. Queues M/M/s
+  function mms(l,m,sv){var a=l/m,r=a/sv;if(r>=1)return null;var sum=0,fact=1;for(var n=0;n<sv;n++){if(n>0)fact*=n;sum+=Math.pow(a,n)/fact}var fs=fact*(sv>0?sv:1);if(sv===1)fs=1;
+    var fsv=1;for(var k=2;k<=sv;k++)fsv*=k;var p0=1/(sum+Math.pow(a,sv)/(fsv*(1-r)));var lq=p0*Math.pow(a,sv)*r/(fsv*Math.pow(1-r,2));return {r:r,p0:p0,lq:lq,l:lq+a,wq:lq/l,w:lq/l+1/m}}
+  (function(){
+    var il=document.getElementById("q-lam"),im=document.getElementById("q-mu"),is=document.getElementById("q-s"),s=document.getElementById("q-chart");
+    var SC=["var(--accent)","var(--good)","var(--c3)"];
+    function draw(){var l=+il.value,m=+im.value,sv=+is.value;document.getElementById("q-lam-out").textContent=l;document.getElementById("q-mu-out").textContent=m;document.getElementById("q-s-out").textContent=sv;
+      var q=mms(l,m,sv);
+      if(!q)tiles("q-sum",[[Math.round(l/(m*sv)*100)+"%","utilization: arrivals exceed capacity","var(--bad)"],["∞","the line grows without limit; add a server or speed up service","var(--bad)"]]);
+      else tiles("q-sum",[[Math.round(q.r*100)+"%","server utilization (ρ)",q.r>=.85?"var(--signal)":""],[f2(q.lq),"average number waiting (Lq)"],[f2(q.l),"average number in the system (L)"],[f1(q.wq*60)+" min","average wait in line (Wq)",q.wq*60>30?"var(--bad)":""],[f1(q.w*60)+" min","average time in the system (W)"],[Math.round(q.p0*100)+"%","of the time the system is empty (P0)"]]);
+      clear(s);var L=58,R=600,T=26,B=232,cur=q?q.wq*60:0,opts=[15,30,60,120,240,480],ym=opts.filter(function(o){return o>=Math.max(cur*1.6,15)})[0]||480;
+      var X=function(r){return L+(R-L)*r},Y=function(v){return B-(B-T)*Math.min(v,ym)/ym};
+      [0,.25,.5,.75,1].forEach(function(r){el("line",{x1:X(r),y1:T,x2:X(r),y2:B,stroke:"var(--line)"},s);txt(s,X(r),B+16,Math.round(r*100)+"%",{anchor:"middle",mono:true,size:10.5})});
+      [0,ym/2,ym].forEach(function(v){el("line",{x1:L,y1:Y(v),x2:R,y2:Y(v),stroke:"var(--line)"},s);txt(s,L-6,Y(v)+4,v+"",{anchor:"end",mono:true,size:10.5})});
+      txt(s,4,12,"wait (min)",{size:10.5,mono:true});txt(s,R,B+34,"utilization ρ",{anchor:"end",size:11});
+      el("rect",{x:X(.85),y:T,width:X(1)-X(.85),height:B-T,fill:"var(--bad-soft)",opacity:.6},s);txt(s,X(.925),B-8,"danger zone",{anchor:"middle",size:10.5,weight:700,fill:"var(--bad)"});
+      var sets=[1,2,3];if(sv>3)sets.push(sv);
+      sets.forEach(function(k,ci){var d="",clip=false;for(var r=.02;r<.985;r+=.01){var qq=mms(r*k*m,m,k);if(!qq)break;var v=qq.wq*60;if(v>ym){if(!clip){d+=(d?" L":"M")+X(r)+","+Y(ym);clip=true}break}d+=(d?" L":"M")+X(r)+","+Y(v)}
+        var col=SC[ci]||"var(--ink)";el("path",{d:d,fill:"none",stroke:col,"stroke-width":k===sv?3.5:2,opacity:k===sv?1:.6},s);
+        txt(s,R+6,T+18+ci*16,k+(k===1?" server":" servers"),{size:11.5,weight:k===sv?700:400,fill:col})});
+      if(q){el("circle",{cx:X(q.r),cy:Y(cur),r:7,fill:"var(--signal)",stroke:"var(--paper)","stroke-width":2},s);txt(s,X(q.r)+(q.r>.75?-10:10),Y(cur)-10,f1(cur)+" min",{anchor:q.r>.75?"end":"start",size:12,weight:700,fill:"var(--signal)"})}
+      var one=mms(l/2,m,1),two=mms(l,m,2);
+      if(one&&two)card("q-pool","Pooling test at λ = "+l+", μ = "+m,"Two servers, same utilization ("+Math.round(two.r*100)+"%)","Two separate lines, half the patients each: "+f1(one.wq*60)+" min average wait. One shared line for both: "+f1(two.wq*60)+" min. Same staff and demand; no server sits idle while the other has a queue.");
+      else card("q-pool","Pooling test","Needs λ below 2μ","With these rates even two servers can't keep up. Lower λ or raise μ to compare separate lines with a shared line.")}
+    [il,im,is].forEach(function(i){i.addEventListener("input",draw)});draw();
+  })();
+
+  // 5. Line balancing
+  (function(){
+    var T=[["A",10,[]],["B",11,["A"]],["C",5,["B"]],["D",4,["B"]],["E",12,["A"]],["F",3,["C","D"]],["G",7,["F"]],["H",11,["E"]],["I",3,["G","H"]]];
+    var by={};T.forEach(function(t){by[t[0]]=t});
+    function follow(n){var out={};(function rec(x){T.forEach(function(t){if(t[2].indexOf(x)>=0&&!out[t[0]]){out[t[0]]=1;rec(t[0])}})})(n);return Object.keys(out)}
+    var RU=[["Longest task time",function(t){return t[1]}],["Most following tasks",function(t){return follow(t[0]).length}],["Ranked positional weight",function(t){return t[1]+follow(t[0]).reduce(function(a,f){return a+by[f][1]},0)}],["Shortest task time",function(t){return -t[1]}]];
+    var rule=0,cin=document.getElementById("lb-c"),total=T.reduce(function(a,t){return a+t[1]},0);
+    var pg=document.getElementById("pg-chart"),POS={A:[50,95],B:[160,50],E:[160,140],C:[280,22],D:[280,82],H:[280,150],F:[390,52],G:[500,52],I:[620,100]};
+    arrowDef(pg,"ap","var(--muted)");
+    T.forEach(function(t){t[2].forEach(function(p){var a=POS[p],b=POS[t[0]],dx=b[0]-a[0],dy=b[1]-a[1],d=Math.sqrt(dx*dx+dy*dy);el("line",{x1:a[0]+dx/d*20,y1:a[1]+dy/d*20,x2:b[0]-dx/d*22,y2:b[1]-dy/d*22,stroke:"var(--muted)","stroke-width":1.5,"marker-end":"url(#ap)"},pg)})});
+    var pgn={};T.forEach(function(t){var p=POS[t[0]],g=el("g",{},pg);pgn[t[0]]=el("circle",{cx:p[0],cy:p[1],r:18,fill:"var(--paper)",stroke:"var(--accent)","stroke-width":2},g);txt(g,p[0],p[1]+5,t[0],{anchor:"middle",size:14,weight:700,fill:"var(--ink)",disp:true});txt(g,p[0],p[1]+33,t[1]+"",{anchor:"middle",size:11,mono:true})});
+    txt(pg,10,202,"Circle = task, number below = task time, arrow = must finish first. Colours match the stations below.",{size:11});
+    function solve(C){var done={},st=[],key=RU[rule][1];while(Object.keys(done).length<T.length){var cur={tasks:[],t:0};
+        while(true){var cand=T.filter(function(t){return !done[t[0]]&&t[2].every(function(p){return done[p]})&&t[1]<=C-cur.t});if(!cand.length)break;
+          cand.sort(function(a,b){return key(b)-key(a)||(a[0]<b[0]?-1:1)});var pick=cand[0];done[pick[0]]=1;cur.tasks.push(pick);cur.t+=pick[1]}
+        if(!cur.tasks.length)break;st.push(cur)}return st}
+    var SC=["var(--accent)","var(--good)","var(--signal)","var(--c3)","var(--bad)","var(--l1)","var(--muted)","var(--accent)","var(--good)","var(--signal)"];
+    var s=document.getElementById("lb-chart");
+    function draw(){var C=+cin.value;document.getElementById("lb-c-out").textContent=C;var st=solve(C);
+      clear(s);var L=90,R=640,top=20,bh=22,gap=6,H=top+st.length*(bh+gap)+34;s.setAttribute("viewBox","0 0 680 "+Math.max(H,120));var X=function(v){return L+(R-L)*v/C};
+      st.forEach(function(x,i){var y=top+i*(bh+gap),cx=L;txt(s,L-8,y+bh/2+4,"Station "+(i+1),{anchor:"end",size:12,fill:"var(--ink)"});
+        el("rect",{x:L,y:y,width:R-L,height:bh,rx:4,fill:"var(--bg)"},s);
+        x.tasks.forEach(function(t){var w=X(t[1])-L;el("rect",{x:cx,y:y,width:Math.max(w-1.5,1),height:bh,rx:4,fill:SC[i%SC.length]},s);txt(s,cx+w/2,y+bh/2+4.5,t[0]+" "+t[1],{anchor:"middle",size:11.5,weight:700,fill:"var(--paper)"});cx+=w;pgn[t[0]].setAttribute("stroke",SC[i%SC.length]);pgn[t[0]].setAttribute("stroke-width",4)});
+        if(C-x.t>0)txt(s,cx+6,y+bh/2+4,"idle "+(C-x.t),{size:11,fill:"var(--muted)"})});
+      el("line",{x1:R,y1:top-8,x2:R,y2:top+st.length*(bh+gap),stroke:"var(--bad)","stroke-width":2,"stroke-dasharray":"5 4"},s);txt(s,R,top-10+ -0,"cycle time "+C,{anchor:"end",size:11.5,weight:700,fill:"var(--bad)"});
+      var n=st.length,eff=total/(n*C),mn=Math.ceil(total/C);
+      tiles("lb-sum",[[n+"","stations used"],[mn+"","theoretical minimum (66 ÷ "+C+", rounded up)",n>mn?"var(--signal)":"var(--good)"],[Math.round(eff*100)+"%","efficiency"],[Math.round((1-eff)*100)+"%","balance delay (idle share)"],[(n*C-total)+"","idle time per cycle"],[f1(60/C),"units per hour if times are in minutes"]])}
+    chipset(document.getElementById("lb-rules"),RU.map(function(r){return r[0]}),0,function(i){rule=i;draw()});
+    cin.addEventListener("input",draw);draw();
+  })();
+
+  // 6. Service variability (Frei)
+  (function(){
+    var V=[["Arrival","Customers don't come when you want them","Trauma comes in bursts: weekend nights, multi-vehicle crashes.","Keep surge staff on call; flexible bays that switch between uses.","Pre-alerts from paramedics; regional diversion when one centre is full."],
+      ["Request","Customers want different things","A fall in an older patient vs a gunshot wound need different teams.","Broad-skilled trauma team that handles any case.","Tiered trauma activation: full team only for the most severe calls."],
+      ["Capability","Customers differ in what they can do for themselves","Some patients can't give a history at all.","Staff ask, examine and test instead of relying on the patient.","Standard checklists and handover formats from paramedics."],
+      ["Effort","Customers differ in how much effort they put in","Families may or may not bring medication lists.","Pharmacy and records staff fill the gaps.","Shared electronic records so the information is already there."],
+      ["Subjective preference","Customers judge service differently","Families want updates at different frequencies.","A named family liaison who adapts to each family.","Fixed update times and a standard briefing script."]];
+    var mode=0,box=document.getElementById("sv-grid");
+    function draw(){box.innerHTML="";V.forEach(function(v){var d=document.createElement("div");d.className="vc";var h=document.createElement("b");h.textContent=v[0];d.appendChild(h);
+      var p=document.createElement("small");p.textContent=v[1];d.appendChild(p);var e=document.createElement("p");e.textContent=v[2];d.appendChild(e);
+      var a=document.createElement("p");a.className="strat "+(mode?"rd":"ac");a.textContent=(mode?"Reduce: ":"Accommodate: ")+v[mode?4:3];d.appendChild(a);box.appendChild(d)})}
+    chipset(document.getElementById("sv-mode"),["Accommodate it","Reduce it"],0,function(i){mode=i;draw()});draw();
+  })();
+
+  // 7. Redesign levers
+  (function(){
+    var C=["Wait","Capacity","Variability","Errors"];
+    var LV=[["Eliminate","Remove steps that add no value",[2,0,0,1],"Drop repeated assessments; the team takes the paramedic handover once, all together."],
+      ["Run in parallel","Do steps at the same time instead of one after another",[2,1,0,0],"Draw blood and do bedside imaging during the primary survey instead of after it."],
+      ["Protect the bottleneck","Never let it sit idle; move work off it",[2,2,0,0],"A technician preps the next patient so the CT scanner is never empty between scans."],
+      ["Add capacity at the bottleneck","Only there; anywhere else changes nothing",[2,2,0,0],"A second scanner beside the trauma bay, or an operating room held open for trauma."],
+      ["Pool resources","One shared queue for several servers",[2,1,1,0],"One trauma team covers two bays instead of one team fixed to each bay."],
+      ["Segment the flow","Separate fast, simple cases from slow, complex ones",[2,1,2,0],"Tiered activation: minor injuries go to a fast track, major ones get the full team."],
+      ["Move information ahead","Let data arrive before the patient",[1,0,2,1],"Paramedic pre-alert so the team, blood and scanner are ready on arrival."],
+      ["Standardize","Same steps and formats every time",[1,0,2,2],"Trauma checklists and a fixed handover format cut omissions."]];
+    var tb=document.getElementById("lv-table"),t=document.createElement("table"),th=document.createElement("thead"),hr=document.createElement("tr");
+    ["Lever"].concat(C).forEach(function(c,i){var h=document.createElement("th");h.textContent=c;if(i)h.className="c";hr.appendChild(h)});th.appendChild(hr);t.appendChild(th);
+    var body=document.createElement("tbody"),trs=[];
+    LV.forEach(function(l,i){var tr=document.createElement("tr");tr.tabIndex=0;tr.setAttribute("role","button");var td=document.createElement("td");var b=document.createElement("b");b.textContent=l[0];var sm=document.createElement("small");sm.textContent=l[1];td.appendChild(b);td.appendChild(sm);tr.appendChild(td);
+      l[2].forEach(function(v){var c=document.createElement("td");c.className="c";var dot=document.createElement("span");dot.className="eff e"+v;dot.setAttribute("aria-label",v===2?"strong effect":v===1?"some effect":"little effect");c.appendChild(dot);tr.appendChild(c)});
+      function go(){trs.forEach(function(x,j){x.classList.toggle("on",j===i)});card("lv-card",l[0],l[1],l[3])}
+      tr.addEventListener("click",go);tr.addEventListener("keydown",function(e){if(e.key==="Enter"||e.key===" "){e.preventDefault();go()}});body.appendChild(tr);trs.push(tr)});
+    t.appendChild(body);tb.appendChild(t);trs[0].click();
+    var cap=document.createElement("p");cap.className="cap";cap.textContent="Filled circle = strong effect, half circle = some effect. My reading of what each lever mainly changes.";tb.appendChild(cap);
+  })();
+
+  // 8. GVC governance
+  (function(){
+    var s=document.getElementById("gv-chart");
+    var G=[["Market","Simple product, price does the coordinating. Buyers can switch suppliers easily.","Buying standard gloves or saline at the lowest price."],
+      ["Modular","Complex product, but the supplier follows codified specifications and can serve many buyers.","Outsourced lab testing to a defined standard."],
+      ["Relational","Complex, tacit information exchanged through trust and close ties; mutual dependence.","A hospital and the regional paramedic service co-designing the trauma pre-alert protocol."],
+      ["Captive","Small suppliers depend on a dominant buyer that sets terms and monitors closely.","A small transport firm working only for one health authority."],
+      ["Hierarchy","Done in-house; the lead firm controls it directly.","The hospital runs its own imaging and operating rooms."]];
+    var sel=2,L=40,R=640,W=(R-L)/5;
+    function draw(){clear(s);arrowDef(s,"ag","var(--muted)");
+      el("line",{x1:L,y1:44,x2:R,y2:44,stroke:"var(--muted)","stroke-width":1.5,"marker-end":"url(#ag)"},s);
+      txt(s,L,30,"Low",{size:11.5,mono:true});txt(s,R,30,"High",{anchor:"end",size:11.5,mono:true});
+      txt(s,340,30,"explicit coordination and power asymmetry",{anchor:"middle",size:12,weight:700,fill:"var(--accent)"});
+      G.forEach(function(g,i){var x=L+i*W+6,h=50+i*24,y=200-h,on=i===sel,gg=el("g",{},s);
+        el("rect",{x:x,y:y,width:W-12,height:h,rx:6,fill:on?"var(--accent)":"var(--accent-soft)",stroke:"var(--accent)","stroke-width":on?2.5:1},gg);
+        txt(gg,x+(W-12)/2,214,g[0],{anchor:"middle",size:13,weight:700,fill:on?"var(--accent)":"var(--ink)"});
+        hit(gg,g[0],function(){sel=i;draw()})});
+      card("gv-card",G[sel][0],"Hospital example: "+G[sel][2],G[sel][1])}
+    draw();
+  })();
+
+  // 9. Process model families
+  (function(){
+    var M=[["Flowchart / swimlane","Activities, decisions and handoffs in sequence",[0]],["IDEF0","Each activity's inputs, controls, outputs and mechanisms, in nested levels",[0,1]],["Design structure matrix (DSM)","Who needs information from whom; shows rework loops and iteration",[1]],["PERT / Gantt / critical path","Durations, dependencies and the critical path",[2]],["Queueing models","Waits and utilization under random demand",[3]],["Discrete-event simulation","Flow over time with variability, resources and rules",[3,2]],["System dynamics","Feedback loops and stocks over longer periods",[3]]];
+    var Q=["Where do handoffs happen?","Where does rework loop?","How long will it take?","What happens when demand varies?"];
+    var box=document.getElementById("md-grid"),q=0;
+    function draw(){box.innerHTML="";M.forEach(function(m){var d=document.createElement("div");d.className="mc"+(m[2].indexOf(q)>=0?" on":"");var b=document.createElement("b");b.textContent=m[0];var p=document.createElement("small");p.textContent=m[1];d.appendChild(b);d.appendChild(p);box.appendChild(d)})}
+    chipset(document.getElementById("md-chips"),Q,0,function(i){q=i;draw()});draw();
+  })();
+
+  // 10. Case order of attack
+  (function(){
+    var S=[["Map","Draw the current state as a swimlane map: steps, decisions, waits, handoffs. Use the case's own steps (step 2)."],["Measure","Put times and resources into the bottleneck table (step 3). Note arrival rates and their peaks."],["Diagnose","Find the bottleneck, the longest waits and the main sources of variability (steps 4 and 6)."],["Redesign","Pick levers (step 7). Check the new bottleneck and the new waits with the same tools."],["Judge","Compare patient outcome, experience, cost and staff load. Name the trade-off you accept."]];
+    var box=document.getElementById("t5");
+    S.forEach(function(x,i){var b=document.createElement("button");b.type="button";b.innerHTML="<i>"+(i+1)+"</i>";b.appendChild(document.createTextNode(x[0]));b.addEventListener("click",function(){go(i)});box.appendChild(b)});
+    function go(i){[].forEach.call(box.children,function(b,j){b.classList.toggle("on",j===i);b.setAttribute("aria-pressed",j===i)});card("t5-card",(i+1)+". "+S[i][0],"",S[i][1])}
+    go(0);
+  })();
+
+
+
+  // ---------- Shared tail: answer frames, notes, layout, navigation ----------
+  [].forEach.call(document.querySelectorAll(".addframe"),function(b){b.addEventListener("click",function(){
+    var ta=document.getElementById(b.dataset.target),tpl=b.closest(".frame").querySelector("pre").textContent;
+    ta.value=ta.value.trim()?ta.value.replace(/\s+$/,"")+"\n\n"+tpl:tpl;ta.dispatchEvent(new Event("input",{bubbles:true}));
+    var sec=ta.closest("section");if(sec.classList.contains("nc")&&sec._nt)sec._nt.click();
+    b.textContent="Added";setTimeout(function(){b.textContent="Add to my notes"},2000)})});
+
+  // Two-column layout inside each step: .viz (or [data-col=a]) left, the rest right; .side or [data-col=b] forces right.
+  [].forEach.call(document.querySelectorAll("section.topic>.main"),function(m){
+    if(m.classList.contains("nosplit"))return;
+    var kids=[].slice.call(m.children).filter(function(k){return !k.classList.contains("head")&&!k.classList.contains("idea")});
+    if(!kids.some(function(k){return k.classList.contains("viz")}))return;
+    var cols=document.createElement("div"),a=document.createElement("div"),b=document.createElement("div");cols.className="cols "+(m.dataset.cols||"");a.className="colA";b.className="colB";
+    kids.forEach(function(k){var toB=k.dataset.col==="b"||k.classList.contains("side")||(!k.classList.contains("viz")&&k.dataset.col!=="a");(toB?b:a).appendChild(k)});
+    cols.appendChild(a);if(b.children.length)cols.appendChild(b);else cols.classList.add("solo");m.appendChild(cols);
+    cols._home=[[].slice.call(a.children),[].slice.call(b.children)]});
+  // Balance the two columns: if the right one runs longer, move its last blocks under the left one while that shortens the step.
+  function balance(){[].forEach.call(document.querySelectorAll(".cols"),function(c){if(!c._home||c.classList.contains("solo"))return;
+    var a=c.children[0],b=c.children[1];if(!b)return;c._home[0].forEach(function(k){a.appendChild(k)});c._home[1].forEach(function(k){b.appendChild(k)});
+    if(getComputedStyle(c).display!=="grid")return;
+    while(b.children.length>1){var before=Math.max(a.offsetHeight,b.offsetHeight);if(b.offsetHeight-a.offsetHeight<60)break;var k=b.lastElementChild;a.appendChild(k);
+      if(Math.max(a.offsetHeight,b.offsetHeight)>=before){b.appendChild(k);break}}})}
+  var balT;function rebalance(){clearTimeout(balT);balT=setTimeout(balance,120)}
+  window.addEventListener("resize",rebalance);
+
+  // Notes: per topic {text, t}; saved to the viewer's private db doc, with a browser copy as backup.
+  var LS=PAGE.notesKey, notes={}, ref=null, timer=null, saving=false, again=false, remoteOK=false;
+  var areas=[].slice.call(document.querySelectorAll("textarea[data-topic]"));
+  var statusEl=document.getElementById("save-status");
+  function setStatus(t,warn){statusEl.textContent=t;statusEl.classList.toggle("warn",!!warn)}
+  function lsLoad(){try{return JSON.parse(localStorage.getItem(LS)||"{}")||{}}catch(e){return {}}}
+  function lsSave(){try{localStorage.setItem(LS,JSON.stringify(notes))}catch(e){}}
+  function stamp(id){var s=document.querySelector('em[data-for="'+id+'"]');var n=notes[id];if(!s)return;
+    s.textContent=(n&&n.t)?"edited "+new Date(n.t).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"}):""}
+  function fill(){areas.forEach(function(a){var id=a.dataset.topic;if(document.activeElement!==a)a.value=(notes[id]&&notes[id].text)||"";stamp(id)})}
+  notes=lsLoad(); fill();
+  function schedule(){clearTimeout(timer);timer=setTimeout(flush,1200)}
+  async function flush(){
+    if(!ref||!remoteOK)return;
+    if(saving){again=true;return}
+    saving=true;setStatus("Saving...");
+    try{await ref.set({notes:notes,updated:Date.now()});setStatus("Saved to your account")}
+    catch(e){
+      if(e&&e.code==="unavailable"){setStatus("Offline, kept on this device",true);setTimeout(schedule,4000)}
+      else{remoteOK=false;setStatus("Saved on this device only",true)}
+    }
+    saving=false;
+    if(again){again=false;flush()}
+  }
+  areas.forEach(function(a){a.addEventListener("input",function(){
+    var id=a.dataset.topic;notes[id]={text:a.value,t:Date.now()};lsSave();stamp(id);
+    if(remoteOK){setStatus("Editing...");schedule()}
+  })});
+  (async function(){
+    var c=window.claude; if(!c||!c.use){setStatus("Saved on this device only",true);return}
+    try{
+      var res=await Promise.all([c.use("db"),c.use("user")]);var db=res[0],user=res[1];
+      if(!db||!user){setStatus("Saved on this device only",true);return}
+      var uid=await user.id(); if(!uid){setStatus("Saved on this device only",true);return}
+      ref=db.doc("data/users/"+uid+"/"+PAGE.notesDoc);
+      var snap=await ref.get(),remote=(snap.exists&&snap.data().notes)||{},localNewer=false;
+      Object.keys(remote).forEach(function(k){var r=remote[k],l=notes[k];if(r&&(!l||r.t>l.t))notes[k]={text:r.text,t:r.t}});
+      Object.keys(notes).forEach(function(k){var r=remote[k];if(!r||notes[k].t>r.t)localNewer=true});
+      remoteOK=true;lsSave();fill();setStatus("Saved to your account");
+      if(localNewer)flush();
+    }catch(e){setStatus("Saved on this device only",true)}
+  })();
+
+  document.getElementById("copy-all").addEventListener("click",function(){
+    var out=areas.map(function(a){var lab=document.querySelector('label[for="'+a.id+'"]');var h=a.closest("section").querySelector("h2").textContent+(lab&&lab.firstChild.textContent.trim()!=="Notes"?" ("+lab.firstChild.textContent.trim()+")":"");return "## "+h+"\n"+(a.value.trim()||"(no notes)")}).join("\n\n");
+    var msg=document.getElementById("copy-msg");
+    function fallback(){var t=document.createElement("textarea");t.value=out;document.body.appendChild(t);t.select();try{document.execCommand("copy");msg.textContent="Copied"}catch(e){msg.textContent="Select and copy manually"}t.remove()}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(out).then(function(){msg.textContent="Copied"},fallback)}else fallback();
+    setTimeout(function(){msg.textContent=""},2500);
+  });
+
+
+  // Note pads: per-step toggle plus one switch in the top bar for all of them (key N). Remembered in this browser.
+  (function(){
+    var NK=PAGE.notesKey+"-closed",closed={};
+    try{closed=JSON.parse(localStorage.getItem(NK)||"{}")||{}}catch(e){}
+    var secs=[].slice.call(document.querySelectorAll("section.topic")).filter(function(x){return x.querySelector(":scope>.notes")});
+    var all=document.getElementById("notes-all");
+    function save(){try{localStorage.setItem(NK,JSON.stringify(closed))}catch(e){}}
+    function paint(){var n=0;secs.forEach(function(sec){var c=!!closed[sec.id];if(c)n++;sec.classList.toggle("nc",c);var b=sec._nt;b.textContent=c?"Show notes":"Hide notes";b.setAttribute("aria-expanded",!c)});
+      var allClosed=n===secs.length;rebalance();all.textContent=allClosed?"Notes: off":"Notes: on";all.setAttribute("aria-pressed",!allClosed);all.title=(allClosed?"Show":"Hide")+" every notes panel (N)"}
+    secs.forEach(function(sec){var b=document.createElement("button");b.type="button";b.className="nt";b.setAttribute("aria-controls",sec.querySelector(":scope>.notes textarea").id);
+      b.addEventListener("click",function(){closed[sec.id]=!closed[sec.id];save();paint();if(!closed[sec.id])sec.querySelector(":scope>.notes textarea").focus()});
+      sec.querySelector(".head").appendChild(b);sec._nt=b});
+    function toggleAll(){var close=all.getAttribute("aria-pressed")==="true";secs.forEach(function(sec){closed[sec.id]=close});save();paint()}
+    all.addEventListener("click",toggleAll);
+    paint();balance();
+    // Keyboard: N toggles all notes, J / K jump to the next / previous step.
+    var steps=[].slice.call(document.querySelectorAll("section.topic"));
+    document.addEventListener("keydown",function(e){
+      var t=e.target,typing=t&&(t.tagName==="TEXTAREA"||t.tagName==="INPUT"||t.tagName==="SELECT"||t.isContentEditable);
+      if(typing||e.ctrlKey||e.metaKey||e.altKey)return;
+      var k=e.key.toLowerCase();
+      if(k==="n"){e.preventDefault();toggleAll();return}
+      if(k==="j"||k==="k"){e.preventDefault();var top=document.getElementById("topbar").getBoundingClientRect().bottom+12;
+        var i=steps.findIndex(function(s){return s.getBoundingClientRect().top>top+4});if(i<0)i=steps.length;
+        var cur=i-1,target=k==="j"?steps[Math.min(i,steps.length-1)]:steps[Math.max(cur-(steps[cur]&&steps[cur].getBoundingClientRect().top>top-8?1:0),0)];
+        if(target)target.scrollIntoView({block:"start"})}
+    });
+  })();
+
+  // Sticky bar height drives scroll offsets and chart heights.
+  (function(){var bar=document.getElementById("topbar");function set(){document.documentElement.style.setProperty("--navh",bar.offsetHeight+"px")}set();window.addEventListener("resize",set)})();
+
+  var links=[].slice.call(document.querySelectorAll("nav.toc a"));
+  if("IntersectionObserver" in window){
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){links.forEach(function(l){l.classList.toggle("on",l.getAttribute("href")==="#"+e.target.id)})}})},{rootMargin:"-30% 0px -60% 0px"});
+    links.forEach(function(l){var s=document.querySelector(l.getAttribute("href"));if(s)io.observe(s)});
+  }
+
+})();
+</script>

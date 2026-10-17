@@ -1,0 +1,17 @@
+:root{
+  --bg:#eef3f3; --paper:#ffffff; --ink:#132326; --muted:#53686c; --line:#d2dfe0;
+  --accent:#0d6466; --accent-soft:#dcefee; --signal:#a8600c; --signal-soft:#fbeedb;
+  --good:#2b7a4b; --good-soft:#e0f1e6; --bad:#c0392b; --bad-soft:#fae3df; --pad:#fafcfb; --padline:#e2ebea;
+  --c3:#7a4f9e; --l1:#3a5a9b;
+  --display:"Barlow Semi Condensed","Arial Narrow",system-ui,sans-serif; --body:"Atkinson Hyperlegible",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f1718; --paper:#162123; --ink:#e2eced; --muted:#93a8ab; --line:#28393b;
+  --accent:#5cc2c0; --accent-soft:#183334; --signal:#eaa24c; --signal-soft:#3a2b16;
+  --good:#6cc790; --good-soft:#1a3324; --bad:#f08b7e; --bad-soft:#3c211e; --pad:#182426; --padline:#233335;
+  --c3:#c3a0e6; --l1:#8fa9e6; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f1718; --paper:#162123; --ink:#e2eced; --muted:#93a8ab; --line:#28393b;
+  --accent:#5cc2c0; --accent-soft:#183334; --signal:#eaa24c; --signal-soft:#3a2b16;
+  --good:#6cc790; --good-soft:#1a3324; --bad:#f08b7e; --bad-soft:#3c211e; --pad:#182426; --padline:#233335;
+  --c3:#c3a0e6; --l1:#8fa9e6; color-scheme:dark}

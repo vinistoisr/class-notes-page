@@ -1,0 +1,5 @@
+chk.js
+*.zip
+__pycache__/
+node_modules/
+shots/
