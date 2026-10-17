@@ -121,10 +121,12 @@ def main():
             if not f["path"].startswith(prefix):
                 continue
             rel = f["path"][len(prefix):]
+            if rel not in local_files:
+                continue  # only files actually written inside this course folder
             flist.append({"title": f.get("title") or os.path.basename(rel), "module": f.get("module", ""), "path": os.path.join(mat, *rel.split("/")),
                           "url": f.get("view", ""), "kind": kinds.get(os.path.splitext(rel)[1].lower(), "file")})
         for l in c["links"]:
-            if l.get("type") == "Link" and l.get("url"):
+            if l.get("type") == "Link" and re.match(r"https?://", l.get("url") or "", re.I):
                 flist.append({"title": l["title"], "module": l["module"], "path": "", "url": l["url"], "kind": "link"})
         json.dump(flist, open(os.path.join(folder, "files.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
         # events for the schedule

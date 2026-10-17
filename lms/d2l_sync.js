@@ -45,7 +45,7 @@ async function cnpSync(CFG) {
   const ous = CFG.courses || [];
   if (!ous.length) return { error: "Pass courses: [orgUnitId, ...] (from discover)." };
   const maxFile = (CFG.maxFileMB || 150) * 1048576, maxTotal = (CFG.maxTotalMB || 900) * 1048576;
-  const clean = (s) => String(s || "untitled").replace(/[\\/:*?"<>|\u0000-\u001f]/g, "-").replace(/\s+/g, " ").trim().slice(0, 90);
+  const clean = (s) => { const v = String(s || "untitled").replace(/[\\/:*?"<>|\u0000-\u001f]/g, "-").replace(/\s+/g, " ").trim().slice(0, 90); return /^\.+$/.test(v) ? "-" : v; };
   const extOf = (u) => { const m = /\.([a-z0-9]{1,5})(?:$|[?#])/i.exec(u || ""); return m ? "." + m[1].toLowerCase() : ""; };
   const files = [], manifest = { generated: new Date().toISOString(), site: location.origin, le: LE, courses: [], skipped: [] };
 

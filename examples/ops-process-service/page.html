@@ -1002,7 +1002,8 @@ Effect on the patient's experience:</pre></div>
       var t=document.createElement("div");t.className="ftext";var b=document.createElement("b");b.textContent=f.title;t.appendChild(b);
       var sm=document.createElement("small");sm.textContent=[LAB[k]||k,f.when,f.note].filter(Boolean).join(" · ");t.appendChild(sm);d.appendChild(t);
       var acts=document.createElement("div");acts.className="factions";
-      if(f.url){var a=btn("a",k==="link"?"Open":"Open in Brightspace");a.href=f.url;a.target="_blank";a.rel="noopener";acts.appendChild(a)}
+      var u=null;try{u=f.url?new URL(f.url,location.href):null}catch(e){u=null}
+      if(u&&/^https?:$/.test(u.protocol)){var a=btn("a",k==="link"?"Open":"Open in Brightspace");a.href=u.href;a.target="_blank";a.rel="noopener";acts.appendChild(a)}
       if(f.path&&local){var l=btn("a","Open my copy","pri");l.href=fileUrl(f.path);acts.appendChild(l)}
       if(f.path){var c=btn("button","Copy path");c.type="button";c.title=f.path;c.addEventListener("click",function(){
         function done(m){c.textContent=m;setTimeout(function(){c.textContent="Copy path"},1800)}
