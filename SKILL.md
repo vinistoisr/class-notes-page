@@ -70,6 +70,8 @@ Keep source next to the course material: `<root>/<course folder>/pages/session<N
 | `app.js` | One IIFE per step that draws and wires it. |
 | `extra.css` | Optional. |
 
+`data-nav` labels go in the sticky top bar, which must stay one row on a laptop: one or two words, 12 characters at most ("Queues", "The case", "Glossary"). It wraps rather than scrolls on narrow screens and shows numbers only on phones.
+
 ```html
 <section class="topic" id="queue" data-nav="Waiting lines">
   <div class="main">

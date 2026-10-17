@@ -68,7 +68,7 @@ def main():
     for m in re.finditer(r'<section class="topic" id="([^"]+)"[^>]*?data-nav="([^"]+)"[^>]*>(.*?)</section>', sections, re.S):
         sid, label, inner = m.group(1), m.group(2), m.group(3)
         num = re.search(r'<span class="num">([^<]+)</span>', inner)
-        nav.append('    <a href="#%s"><i>%s</i>%s</a>' % (sid, num.group(1) if num else "", label))
+        nav.append('    <a href="#%s" title="%s"><i>%s</i><span>%s</span></a>' % (sid, label, num.group(1) if num else "", label))
     n_sections = len(re.findall(r'<section class="topic"', sections))
     if len(nav) != n_sections:
         sys.exit("every <section class=\"topic\"> needs id and data-nav (found %d of %d)" % (len(nav), n_sections))
@@ -90,7 +90,7 @@ def main():
   </section>
 
   """
-        nav.insert(0, '    <a href="#files"><i>F</i>Files</a>')
+        nav.insert(0, '    <a href="#files" title="Files"><i>F</i><span>Files</span></a>')
     # Instructor line: name, Google Scholar, and the course's Brightspace home. Only http(s) links.
     def safe_url(u):
         return e(u) if isinstance(u, str) and re.match(r"https?://", u, re.I) else ""
